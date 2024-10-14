@@ -26,7 +26,7 @@ const NavBar: React.FC<NavBarProps> = ({ setMobileMenuOpen }) => {
           className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
         >
           <span className="sr-only">Abrir menu</span>
-          <Bars3Icon aria-hidden="true" className="h-6 w-6" />
+          <Bars3Icon aria-hidden="true" className="h-6 w-6 text-slate-50" />
         </button>
       </div>
       <PopoverGroup className="hidden lg:flex lg:gap-x-12">
