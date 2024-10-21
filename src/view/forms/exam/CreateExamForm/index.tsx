@@ -9,7 +9,7 @@ export const CreateExamForm = () => {
 
   return (
     <div className="p-6 ">
-      <h2 className="text-lg font-semibold mb-4">Cadastrar Exame</h2>
+      <h2 className="text-lg font-semibold mb-4 text-slate-700 font-inter">Cadastrar Exame</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
           {...register("specialty")}
