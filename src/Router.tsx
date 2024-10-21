@@ -1,18 +1,26 @@
 // src/Router.tsx
 import { Route, Routes } from 'react-router-dom';
 
-import { Exam } from './pages/Exam';
-import { DefaultLayout } from './layout/DefaultLayout';
+import { Exam } from './view/pages/Exam';
+import { DefaultLayout } from './view/DefaultLayout';
+import { CreateExamForm } from './view/forms/exam/CreateExamForm';
 
 
 export function Router() {
   return (
     <Routes>
-        <Route path="/exam" element={<DefaultLayout />} >
+        <Route path="/" element={<DefaultLayout />} >
             <Route 
                 index 
+                path='exam'
                 element={<Exam />} 
             />
+            <Route 
+                index 
+                path='form'
+                element={<CreateExamForm />} 
+            />
+            
         </Route>
     </Routes>
   );
