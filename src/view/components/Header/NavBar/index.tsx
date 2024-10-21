@@ -8,7 +8,7 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ setMobileMenuOpen }) => {
   return (
-    <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+    <nav aria-label="Global" className="mx-auto flex max-w-full md:max-w-[80vw] items-center justify-between p-6 lg:px-8">
       <div className="flex lg:flex-1">
         <a href="#" className="-m-1.5 p-1.5">
           <span className="sr-only">Clínica Santa Clara</span>
