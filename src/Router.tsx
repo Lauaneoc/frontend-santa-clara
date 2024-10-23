@@ -1,7 +1,7 @@
 // src/Router.tsx
 import { Route, Routes } from 'react-router-dom';
 
-import { Exam } from './view/pages/Exam';
+import { ExamPage } from './view/pages/Exam';
 import { DefaultLayout } from './view/DefaultLayout';
 import { CreateExamForm } from './view/forms/exam/CreateExamForm';
 
@@ -13,7 +13,7 @@ export function Router() {
             <Route 
                 index 
                 path='exam'
-                element={<Exam />} 
+                element={<ExamPage />} 
             />
             <Route 
                 index 

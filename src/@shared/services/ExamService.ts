@@ -3,20 +3,26 @@ import { Exam } from '../interfaces/models/Exams';
 import api from './api/api';
 
 const ExamService = {
-    getExams: async () => {
-        const response = await axios.get<Exam[]>(`${api}/exams`);
-        return response.data;
+    getExams: async (p0: any) => {
+        try {
+            const response = await axios.get('http://localhost:3000/exame');
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching exams:', error);
+            throw error; 
+        }
     },
     createOne: async (exam: Partial<Exam>) => {
-        const response = await axios.post<Exam>(`${api}/exams`, exam);
+        const response = await axios.post<Exam>(`http://localhost:3000/exame`, exam);
         return response.data;
     },
     updateOne: async (exam: Exam) => {
-        const response = await axios.put<Exam>(`${api}/exams/${exam.id}`, exam);
+        const response = await axios.patch<Exam>(`http://localhost:3000/exame/${exam.id}`, exam);
         return response.data;
     },
     deleteOne: async (examId: string) => {
-        await axios.delete(`${api}/exams/${examId}`);
+        await axios.delete(`http://localhost:3000/exame/${examId}`);
     },
 };
 

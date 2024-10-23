@@ -1,8 +1,41 @@
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+// src/pages/exams/ExamPage.tsx
 import { Table } from "../../components/Table";
 import { Button } from "../../components/Button";
+import { ExamContext, ExamsContextProvider } from "../../../@shared/contexts/Exams/ExamContext";
+import { useContext, useState } from "react";
+import { CreateExamForm } from "../../forms/exam/CreateExamForm";
+import { Modal } from "../../components/Modal";
+import TableOptions from "../../components/Table/TableOptions";
+import { UpdateExamForm } from "../../forms/exam/UpdateExamForm";
 
-export function Exam() {
+function Page() {
+    const [createForm, setCreateForm] = useState(false);
+    const [updateForm, setUpdateForm] = useState(false);
+    const [selectedExam, setSelectedExam] = useState<string | null>(null);
+    const context = useContext(ExamContext);
+
+    if (!context) {
+        return <div>Loading...</div>; 
+    }
+
+    const { fetchExams, deleteExam } = context;
+    const examsData = fetchExams.data || [];
+
+    const renderOptions = (id: string) => (
+        <TableOptions 
+            options={[
+                { label: 'Atualizar', onClick: () => { 
+                    setSelectedExam(id);
+                    setUpdateForm(true); 
+                }},
+                { label: 'Excluir', onClick: () => deleteExam(id) }
+            ]}
+        />
+    );
+
+    // Obtendo o exame selecionado
+    const selectedExamData = selectedExam ? examsData.find((exam: { id: string; }) => exam.id === selectedExam) : null;
+
     return (
         <div className="h-[80vh] rounded-md bg-slate-50">
             <div className="flex items-start justify-between pt-6 px-6 lg:px-8">
@@ -10,38 +43,39 @@ export function Exam() {
                     <h2 className="text-gray-900 text-lg font-semibold">Exames</h2>
                     <p className="text-gray-500 text-xs">Gerencie seus exames</p>
                 </div>
-                <Button>Cadastrar Exame</Button>
+                <Button onClick={() => setCreateForm(true)}>Cadastrar Exame</Button>
             </div>
             <div>
                 <Table 
                     columns={[
-                        {header: 'Código do exame', key: 'examCode'},
-                        {header: 'Especialidade', key: 'specialty'},
-                        {header: 'Categoria', key: 'category'},
+                        { header: 'Código do exame', key: 'id' },
+                        { header: 'Especialidade', key: 'specialty' },
+                        { header: 'Categoria', key: 'category' },
                         { 
                             header: '', 
                             key: 'options',
-                            render: (rowData) => (
-                                <button>
-                                    <EllipsisVerticalIcon className="w-5 h-5 text-gray-600" />
-                                </button>
-                            )
+                            render: (rowData) => renderOptions(rowData.id)
                         }
                     ]}
-                    data={[
-                        {examCode: '001', specialty: 'Glicemia', category: 'Laboratorial', options: ''},
-                        {examCode: '002', specialty: 'Raio X', category: 'Imagem'},
-                        {examCode: '003', specialty: 'Audiometria', category: 'Funcional'},
-                        {examCode: '004', specialty: 'Toxicológico', category: 'Laboratorial'},
-                        {examCode: '005', specialty: 'Oftalmológico', category: 'Clínico'},
-                        {examCode: '006', specialty: 'Eletrocardiograma', category: 'Imagem'},
-                        {examCode: '007', specialty: 'Exame de Sangue', category: 'Laboratorial'},
-                        {examCode: '008', specialty: 'Ultrassom Abdominal', category: 'Imagem'},
-                        {examCode: '009', specialty: 'Ressonância Magnética', category: 'Imagem'},
-                        {examCode: '010', specialty: 'Endoscopia', category: 'Clínico'},
-                    ]}
+                    data={examsData}
                 />
             </div>
+
+            <Modal open={createForm} onClose={() => setCreateForm(false)}>
+                <CreateExamForm />
+            </Modal>
+
+            <Modal open={updateForm} onClose={() => setUpdateForm(false)}>
+                {selectedExamData && <UpdateExamForm exam={selectedExamData} />}
+            </Modal>
         </div>
+    );
+}
+
+export function ExamPage() {
+    return (
+        <ExamsContextProvider>
+            <Page />
+        </ExamsContextProvider>
     );
 }

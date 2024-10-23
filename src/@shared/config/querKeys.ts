@@ -1,4 +1,6 @@
-export enum EExam {
-    FIND_MANY = 'FIND_MANY',
-    FIND_ONE = 'FIND_ONE',
-}
+// src/config/queryKeys.ts
+export const queryKeys = {
+    EXAM: {
+        FIND_MANY: 'findManyExams' as const, // Use `as const` para garantir que o tipo seja literal
+    },
+};

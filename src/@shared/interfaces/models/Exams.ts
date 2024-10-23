@@ -1,5 +1,6 @@
 export interface Exam {
     id: string;
-    name: string;
+    category: string;
+    specialty: string;
   }
   

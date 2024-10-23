@@ -1,69 +1,86 @@
+// src/context/ExamContext.tsx
+import React, { createContext, useReducer, ReactNode } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createContext } from 'react';
 import toast from 'react-hot-toast';
+import { ExamState, initialState, reducer } from './reduces';
+import { queryKeys } from '../../config/querKeys';
 import ExamService from '../../services/ExamService';
 import { Exam } from '../../interfaces/models/Exams';
 
-interface IExamContext {
-    fetchExams: ReturnType<typeof useQuery>;
-    createExam: (examData: Partial<Exam>) => void;
-    updateExam: (examData: Exam) => void;
-    deleteExam: (examId: string) => void;
-    state: any;
+interface ExamContextType {
+    fetchExams: any;
+    createExam: any;
+    updateExam: any;
+    deleteExam: (id: string) => void;
+    state: ExamState;
+    setQuery: (type: string, payload: any) => void;
 }
 
-export const ExamContext = createContext({} as IExamContext);
+export const ExamContext = createContext<ExamContextType | undefined>(undefined);
 
-export const ExamsContextProvider = ({ children }: { children: React.ReactNode; }) => {
+interface ExamsContextProviderProps {
+    children: ReactNode;
+}
+
+export const ExamsContextProvider: React.FC<ExamsContextProviderProps> = ({ children }) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
     const queryClient = useQueryClient();
 
+    // Fetch exams
     const fetchExams = useQuery({
-        queryKey: ['exams'],
-        queryFn: () => ExamService.getExams(),
+        queryKey: [queryKeys.EXAM.FIND_MANY, state[queryKeys.EXAM.FIND_MANY]],
+        queryFn: () => ExamService.getExams(state[queryKeys.EXAM.FIND_MANY]),
         staleTime: Infinity,
+        enabled: true,
     });
 
-    const { mutate: createExam } = useMutation({
-        mutationFn: (examData: Partial<Exam>) => ExamService.createOne(examData),
+    // Create exam
+    const createExam = useMutation({
+        mutationFn: (examData: Exam) => ExamService.createOne(examData),
         onSuccess: () => {
-            toast.success('Exame criado com sucesso!');
-            queryClient.invalidateQueries({ queryKey: ['exams'] }); 
+            toast.success('Exame cadastrado com sucesso!');
+            queryClient.invalidateQueries({ queryKey: [queryKeys.EXAM.FIND_MANY] }); 
         },
         onError: () => {
-            toast.error('Erro ao criar exame!');
+            toast.error('Erro ao cadastrar o exame!');
         },
     });
 
-    const { mutate: updateExam } = useMutation({
+    // Update exam
+    const updateExam = useMutation({
         mutationFn: (examData: Exam) => ExamService.updateOne(examData),
         onSuccess: () => {
             toast.success('Exame atualizado com sucesso!');
-            queryClient.invalidateQueries({ queryKey: ['exams'] }); 
-
+            queryClient.invalidateQueries({ queryKey: [queryKeys.EXAM.FIND_MANY] }); 
         },
         onError: () => {
-            toast.error('Erro ao atualizar exame!');
+            toast.error('Erro ao atualizado o exame!');
         },
     });
 
-    const { mutate: deleteExam } = useMutation({
-        mutationFn: (examId: string) => ExamService.deleteOne(examId),
+    // Delete exam
+    const deleteExam = useMutation({
+        mutationFn: (id: string) => ExamService.deleteOne(id),
         onSuccess: () => {
-            toast.success('Exame deletado com sucesso!');
-            queryClient.invalidateQueries({ queryKey: ['exams'] }); 
-
+            toast.success('Exame excluído com sucesso!');
+            queryClient.invalidateQueries({ queryKey: [queryKeys.EXAM.FIND_MANY] });
         },
         onError: () => {
-            toast.error('Erro ao deletar exame!');
+            toast.error('Erro ao excluir o exame!');
         },
     });
+
+    const setQuery = (type: string, payload: any) => {
+        dispatch({ type, payload });
+    };
 
     const contextValues = {
         fetchExams,
         createExam,
+        deleteExam: deleteExam.mutate,
+        state,
         updateExam,
-        deleteExam,
-        state: {},
+        setQuery,
     };
 
     return (
