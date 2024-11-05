@@ -1,4 +1,3 @@
-// src/pages/exams/ExamPage.tsx
 import { Table } from "../../components/Table";
 import { Button } from "../../components/Button";
 import { ExamContext, ExamsContextProvider } from "../../../@shared/contexts/Exams/ExamContext";

@@ -16,7 +16,7 @@ import {
     {
       name: 'Pacientes',
       description: 'Gerencie os dados dos pacientes.',
-      href: '#',
+      href: 'patient',
       icon: UserCircleIcon,
     },
     {
@@ -28,7 +28,7 @@ import {
     {
       name: 'Exames',
       description: 'Gerencie os tipos exames cadastrados.',
-      href: '#',
+      href: 'exam',
       icon: DocumentMagnifyingGlassIcon,
     },
     {

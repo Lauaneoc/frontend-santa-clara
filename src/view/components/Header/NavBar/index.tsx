@@ -30,7 +30,7 @@ const NavBar: React.FC<NavBarProps> = ({ setMobileMenuOpen }) => {
         </button>
       </div>
       <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-        <a href="#" className="text-sm font-semibold leading-6 text-slate-50">Dashboard</a>
+        <a href="/" className="text-sm font-semibold leading-6 text-slate-50">Dashboard</a>
         <PopoverMenu />
         <a href="#" className="text-sm font-semibold leading-6 text-slate-50">bla bla bla</a>
       </PopoverGroup>

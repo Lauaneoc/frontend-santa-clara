@@ -25,7 +25,6 @@ export const useUpdateExamForm = (exam: Exam) => {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<ExamFormData>({
     resolver: zodResolver(schema),

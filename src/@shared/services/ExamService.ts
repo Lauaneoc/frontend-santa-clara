@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Exam } from '../interfaces/models/Exams';
-import api from './api/api';
 
 const ExamService = {
     getExams: async (p0: any) => {
