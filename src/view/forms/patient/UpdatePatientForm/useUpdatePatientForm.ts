@@ -7,7 +7,7 @@ import { Patient } from '../../../../@shared/interfaces/models/Patient';
 
 const schema = z.object({
   cpf: z.string().min(1, "CPF é obrigatório").regex(/^\d{11}$/, "CPF deve conter 11 dígitos"),
-  dateBirthday: z.coerce.date({ required_error: "Data de nascimento é obrigatória" }),
+  dateBirthday: z.string(),
   name: z.string().min(1, "Nome é obrigatório"),
   email: z.string().email("Formato de email inválido").optional(),
   phoneNumber: z.string().min(10, "Número de telefone inválido").optional(),

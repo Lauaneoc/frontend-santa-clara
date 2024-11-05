@@ -27,7 +27,7 @@ export const UpdatePatientForm = ({ patient }: UpdatePatientFormProps) => {
         <Input
           {...register("dateBirthday")}
           label="Data de Nascimento"
-          type="date"
+          type="string"
           error={errors.dateBirthday?.message}
         />
         <Input

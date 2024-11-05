@@ -3,10 +3,12 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PatientContext } from '../../../../@shared/contexts/Patients/PatientContext';
 import { useContext } from 'react';
+import { AxiosError } from 'axios';
+import { UsecaseError } from '../../../../@shared/services/@dto/useCaseError';
 
 const schema = z.object({
   cpf: z.string().min(1, "CPF é obrigatório").regex(/^\d{11}$/, "CPF deve conter 11 dígitos"),
-  dateBirthday: z.coerce.date({ required_error: "Data de nascimento é obrigatória" }),
+  dateBirthday: z.string(),
   name: z.string().min(1, "Nome é obrigatório"),
   email: z.string().email("Formato de email inválido").optional(),
   phoneNumber: z.string().min(10, "Número de telefone inválido").optional(),
@@ -34,13 +36,22 @@ export const useCreatePatientForm = () => {
     register,
     handleSubmit,
     watch,
+    setError,
     formState: { errors },
   } = useForm<PatientFormData>({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data: PatientFormData) => {
-    createPatient.mutate(data);
+  const onSubmit = async (data: PatientFormData) => {
+    try {
+      await createPatient.mutateAsync(data);
+    } catch (e) {
+			if (e instanceof AxiosError) {
+				const error = e as AxiosError<UsecaseError>;
+				const errors = error.response?.data ?? [];
+        console.log({errors})
+			}
+		}
   };
 
   return {

@@ -22,7 +22,7 @@ export const CreatePatientForm = () => {
         <Input
           {...register("dateBirthday")}
           label="Data de Nascimento"
-          type="date"
+          type="string"
           error={errors.dateBirthday?.message}
         />
         <Input

@@ -2,7 +2,7 @@ export interface Patient {
   id: string;
   cpf: string;
   name: string;
-  dateBirthday: Date;
+  dateBirthday: string;
   email: string
   phoneNumber: string;
   cep: string;
