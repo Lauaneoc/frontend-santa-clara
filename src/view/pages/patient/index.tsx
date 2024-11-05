@@ -1,11 +1,11 @@
 import { Table } from "../../components/Table";
 import { Button } from "../../components/Button";
-import { PatientContext, PatientsContextProvider } from "../../../@shared/contexts/Patients/PatientContext";
 import { useContext, useState } from "react";
 import { Modal } from "../../components/Modal";
 import TableOptions from "../../components/Table/TableOptions";
 import { UpdatePatientForm } from "../../forms/patient/UpdatePatientForm";
 import { CreatePatientForm } from "../../forms/patient/CreatePatientForm";
+import { PatientContext, PatientsContextProvider } from "../../../@shared/contexts/Patients/PatientContext";
 
 function Page() {
     const [createForm, setCreateForm] = useState(false);
