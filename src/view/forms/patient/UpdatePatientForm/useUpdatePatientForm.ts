@@ -29,7 +29,7 @@ export const useUpdatePatientForm = (patient: Patient) => {
     throw new Error("PatientContext must be used within an ExamProvider");
   }
 
-  const { createPatient } = context;
+  const { updatePatient } = context;
   
   const {
     register,
@@ -55,7 +55,7 @@ export const useUpdatePatientForm = (patient: Patient) => {
   });
 
   const onSubmit = (data: PatientFormData) => {
-    createPatient.mutate(data);
+    updatePatient.mutate({ ...data, id: patient.id });
   };
 
   return {
