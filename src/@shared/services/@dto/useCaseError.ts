@@ -1,10 +1,15 @@
 export interface UsecaseError {
-	ok: boolean
 	error: {
-		errors: {
-			context: string
-			message: string
-			path: string
-		}[]
-	}
+		response: {
+			data: {
+				message: string;
+				name: string;
+				response: {
+					message: string;
+					path: string;
+				};
+				status: number;
+			};
+		};
+	};
 }

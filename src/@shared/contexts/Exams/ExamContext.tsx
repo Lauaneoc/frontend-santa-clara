@@ -1,5 +1,5 @@
 // src/context/ExamContext.tsx
-import React, { createContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useReducer, ReactNode, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { ExamState, initialState, reducer } from './reduces';
@@ -11,9 +11,13 @@ interface ExamContextType {
     fetchExams: any;
     createExam: any;
     updateExam: any;
-    deleteExam: (id: string) => void;
     state: ExamState;
+    openCreateExamModal: boolean;
+    openUpdateExamModal: boolean;
+    deleteExam: (id: string) => void;
     setQuery: (type: string, payload: any) => void;
+    setOpenCreateExamModal: (open: boolean) => void;
+    setOpenUpdateExamModal: (open: boolean) => void;
 }
 
 export const ExamContext = createContext<ExamContextType | undefined>(undefined);
@@ -24,6 +28,8 @@ interface ExamsContextProviderProps {
 
 export const ExamsContextProvider: React.FC<ExamsContextProviderProps> = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [openCreateExamModal, setOpenCreateExamModal] = useState(false);
+    const [openUpdateExamModal, setOpenUpdateExamModal] = useState(false);
     const queryClient = useQueryClient();
 
     // Fetch exams
@@ -81,6 +87,10 @@ export const ExamsContextProvider: React.FC<ExamsContextProviderProps> = ({ chil
         state,
         updateExam,
         setQuery,
+        openCreateExamModal,
+        openUpdateExamModal,
+        setOpenCreateExamModal,
+        setOpenUpdateExamModal
     };
 
     return (
@@ -88,4 +98,5 @@ export const ExamsContextProvider: React.FC<ExamsContextProviderProps> = ({ chil
             {children}
         </ExamContext.Provider>
     );
-};
+}
+

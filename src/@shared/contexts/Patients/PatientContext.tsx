@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useReducer, ReactNode, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { PatientState, initialState, reducer } from './reduces';
@@ -13,6 +13,10 @@ interface PatientContextType {
     deletePatient: (id: string) => void;
     state: PatientState;
     setQuery: (type: string, payload: any) => void;
+    openCreatePatientModal: boolean;
+    openUpdatePatientModal: boolean;
+    setOpenCreatePatientModal: (open: boolean) => void;
+    setOpenUpdatePatientModal: (open: boolean) => void;
 }
 
 export const PatientContext = createContext<PatientContextType | undefined>(undefined);
@@ -23,6 +27,8 @@ interface PatientsContextProviderProps {
 
 export const PatientsContextProvider: React.FC<PatientsContextProviderProps> = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [openCreatePatientModal, setOpenCreatePatientModal] = useState(false);
+    const [openUpdatePatientModal, setOpenUpdatePatientModal] = useState(false);
     const queryClient = useQueryClient();
 
     const fetchPatients = useQuery({
@@ -76,6 +82,10 @@ export const PatientsContextProvider: React.FC<PatientsContextProviderProps> = (
         state,
         updatePatient,
         setQuery,
+        openCreatePatientModal,
+        openUpdatePatientModal,
+        setOpenCreatePatientModal,
+        setOpenUpdatePatientModal
     };
 
     return (

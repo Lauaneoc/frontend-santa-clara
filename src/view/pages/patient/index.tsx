@@ -6,47 +6,71 @@ import TableOptions from "../../components/Table/TableOptions";
 import { UpdatePatientForm } from "../../forms/patient/UpdatePatientForm";
 import { CreatePatientForm } from "../../forms/patient/CreatePatientForm";
 import { PatientContext, PatientsContextProvider } from "../../../@shared/contexts/Patients/PatientContext";
+import { Input } from "../../components/Input";
 
 function Page() {
-    const [createForm, setCreateForm] = useState(false);
-    const [updateForm, setUpdateForm] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [idToDelete, setIdToDelete] = useState<string>('');
+    const [searchTerm, setSearchTerm] = useState<string>('');  // Estado para o termo de busca
+
     const context = useContext(PatientContext);
 
     if (!context) {
         return <div>Loading...</div>;
     }
 
-    const { fetchPatients, deletePatient } = context;
+    const { fetchPatients, deletePatient, setOpenCreatePatientModal, setOpenUpdatePatientModal, openCreatePatientModal, openUpdatePatientModal } = context;
     const patientsData = fetchPatients.data || [];
+
+    // Função de filtragem direta por CPF
+    const filteredPatients = searchTerm.trim() === ''
+        ? patientsData
+        : patientsData.filter((patient: { cpf: string; }) =>
+            patient.cpf.includes(searchTerm.trim())  // Filtra pacientes pelo CPF
+        );
 
     const renderOptions = (id: string) => (
         <TableOptions 
             options={[
                 { label: 'Atualizar', onClick: () => { 
                     setSelectedPatient(id);
-                    setUpdateForm(true); 
+                    setOpenUpdatePatientModal(true); 
                 }},
-                { label: 'Excluir', onClick: () => deletePatient(id) }
+                { label: 'Excluir', onClick: () => handleDeleteById(id) }
             ]}
         />
     );
+
+    const handleDeleteById = (id: string) => {
+        setIdToDelete(id);
+        setOpenDelete(true);
+    };
 
     const selectedPatientData = selectedPatient ? patientsData.find((patient: { id: string; }) => patient.id === selectedPatient) : null;
 
     return (
         <div className="h-[80vh] rounded-md bg-slate-50">
-            <div className="flex items-start justify-between pt-6 px-6 lg:px-8">
+            <div className="flex items-end justify-between pt-6 px-6 lg:px-8">
                 <div>
                     <h2 className="text-gray-900 text-lg font-semibold">Pacientes</h2>
                     <p className="text-gray-500 text-xs">Gerencie os pacientes cadastrados</p>
+                    <div className="flex gap-2 items-end">
+                        <Input 
+                            placeholder="Pesquise pelo CPF" 
+                            onChange={(e) => setSearchTerm(e.target.value)} 
+                            value={searchTerm} 
+                            className="w-96"
+                        />
+                    </div>
                 </div>
-                <Button onClick={() => setCreateForm(true)}>Cadastrar Paciente</Button>
+                <Button onClick={() => setOpenCreatePatientModal(true)}>Cadastrar Paciente</Button>
             </div>
             <div>
                 <Table 
                     columns={[
                         { header: 'Código do Paciente', key: 'id' },
+                        { header: 'CPF', key: 'cpf' },
                         { header: 'Nome', key: 'name' },
                         { header: 'Data de aniversário', key: 'dateBirthday' },
                         { header: 'Email', key: 'email' },
@@ -57,16 +81,25 @@ function Page() {
                             render: (rowData) => renderOptions(rowData.id)
                         }
                     ]}
-                    data={patientsData}
+                    data={filteredPatients}  // Passa os pacientes filtrados
                 />
             </div>
 
-             <Modal open={createForm} onClose={() => setCreateForm(false)}>
+            <Modal open={openCreatePatientModal} onClose={() => setOpenCreatePatientModal(false)}>
                 <CreatePatientForm />
             </Modal>
 
-            <Modal open={updateForm} onClose={() => setUpdateForm(false)}>
+            <Modal open={openUpdatePatientModal} onClose={() => setOpenUpdatePatientModal(false)}>
                 {selectedPatientData && <UpdatePatientForm patient={selectedPatientData} />}
+            </Modal>
+
+            <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
+                <div className="flex flex-col gap-4 mt-5">
+                    <p className="font-semibold text-lg w-72 text-center">Tem certeza que deseja excluir esse paciente?</p>
+                    <Button onClick={() => { deletePatient(idToDelete); setOpenDelete(false); }}>
+                        Confirmar deleção
+                    </Button>
+                </div>
             </Modal>
         </div>
     );

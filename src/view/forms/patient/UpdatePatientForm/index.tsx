@@ -12,7 +12,7 @@ export const UpdatePatientForm = ({ patient }: UpdatePatientFormProps) => {
 
   return (
     <div className="py-6">
-      <h2 className="text-lg font-semibold mb-4 text-slate-700 font-inter">Cadastrar Paciente</h2>
+      <h2 className="text-lg font-semibold mb-4 text-slate-700 font-inter">Atualizar Paciente</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
           {...register("cpf")}

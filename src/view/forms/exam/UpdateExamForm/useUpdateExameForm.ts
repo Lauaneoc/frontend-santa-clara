@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Exam } from '../../../../@shared/interfaces/models/Exams';
 import { ExamContext } from '../../../../@shared/contexts/Exams/ExamContext';
 import { useContext } from 'react';
+import { AxiosError } from 'axios';
+import { UsecaseError } from '../../../../@shared/services/@dto/useCaseError';
 
 // Define o esquema de validação com Zod
 const schema = z.object({
@@ -20,12 +22,13 @@ export const useUpdateExamForm = (exam: Exam) => {
     throw new Error("ExamContext must be used within an ExamProvider");
   }
 
-  const { updateExam } = context;
+  const { updateExam, setOpenUpdateExamModal } = context;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError
   } = useForm<ExamFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -34,13 +37,30 @@ export const useUpdateExamForm = (exam: Exam) => {
     },
   });
 
-  const onSubmit = (data: any) => {
-    updateExam.mutate({ ...data, id: exam.id });
-};
+  const onSubmit = async (data: ExamFormData) => {
+    try {
+      await updateExam.mutateAsync({ ...data, id: exam.id });
+      setOpenUpdateExamModal(false);
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        const error = e as AxiosError<UsecaseError>;
+        // @ts-ignore
+        const errors = error.response?.data.response ?? [];
+
+        if (Array.isArray(errors)) {
+          errors.forEach((err) => {
+            setError(err.path, { message: err.message });
+          });
+        } else if (errors.path) {
+          setError(errors.path, { message: errors.message });
+        }
+      }
+    }
+  };
 
   return {
     register,
-    handleSubmit: handleSubmit,
+    handleSubmit,
     onSubmit,
     errors,
   };

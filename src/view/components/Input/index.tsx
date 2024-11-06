@@ -10,7 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, name, placeholder = '', type = 'text', error, helperText, className, ...props }, ref) => {
     return (
-      <div className={twMerge("w-full mb-4", className)}>
+      <div className={twMerge("w-full ", className)}>
         {label && (
           <label htmlFor={name} className="block text-sm font-medium text-gray-700">
             {label}

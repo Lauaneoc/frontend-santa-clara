@@ -17,7 +17,7 @@ const ExamService = {
         return response.data;
     },
     updateOne: async (exam: Exam) => {
-        const response = await axios.patch<Exam>(`http://localhost:3000/exame/${exam.id}`, exam);
+        const response = await axios.put<Exam>(`http://localhost:3000/exame/${exam.id}`, exam);
         return response.data;
     },
     deleteOne: async (examId: string) => {

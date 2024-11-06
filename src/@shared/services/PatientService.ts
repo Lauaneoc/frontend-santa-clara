@@ -18,7 +18,7 @@ const PatientService = {
         return response.data;
     },
     updateOne: async (patient: Patient) => {
-        const response = await axios.patch<Patient>(`http://localhost:3000/paciente/${patient.id}`, patient);
+        const response = await axios.put<Patient>(`http://localhost:3000/paciente/${patient.id}`, patient);
         return response.data;
     },
     deleteOne: async (patientId: string) => {

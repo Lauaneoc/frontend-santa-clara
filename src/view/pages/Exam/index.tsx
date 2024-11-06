@@ -6,43 +6,74 @@ import { CreateExamForm } from "../../forms/exam/CreateExamForm";
 import { Modal } from "../../components/Modal";
 import TableOptions from "../../components/Table/TableOptions";
 import { UpdateExamForm } from "../../forms/exam/UpdateExamForm";
+import { Input } from "../../components/Input";
 
 function Page() {
-    const [createForm, setCreateForm] = useState(false);
-    const [updateForm, setUpdateForm] = useState(false);
     const [selectedExam, setSelectedExam] = useState<string | null>(null);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [idToDelete, setIdToDelete] = useState<string>('');
+    const [searchTerm, setSearchTerm] = useState<string>('');
+
     const context = useContext(ExamContext);
 
     if (!context) {
         return <div>Loading...</div>; 
     }
 
-    const { fetchExams, deleteExam } = context;
+    const { 
+        fetchExams, 
+        deleteExam, 
+        openCreateExamModal,
+        setOpenCreateExamModal, 
+        setOpenUpdateExamModal, 
+        openUpdateExamModal 
+    } = context;
+
     const examsData = fetchExams.data || [];
 
+    // Função que renderiza as opções do exame
     const renderOptions = (id: string) => (
         <TableOptions 
             options={[
                 { label: 'Atualizar', onClick: () => { 
                     setSelectedExam(id);
-                    setUpdateForm(true); 
+                    setOpenUpdateExamModal(true); 
                 }},
-                { label: 'Excluir', onClick: () => deleteExam(id) }
+                { label: 'Excluir', onClick: () => handleDeleteById(id) }
             ]}
         />
     );
 
-    // Obtendo o exame selecionado
+    const handleDeleteById = (id: string) => {
+        setIdToDelete(id);
+        setOpenDelete(true);
+    }
+
     const selectedExamData = selectedExam ? examsData.find((exam: { id: string; }) => exam.id === selectedExam) : null;
+
+    // Função de filtragem direta (sem useEffect)
+    const filteredExams = searchTerm.trim() === ''
+        ? examsData
+        : examsData.filter((exam: { specialty: string; }) => 
+            exam.specialty.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
     return (
         <div className="h-[80vh] rounded-md bg-slate-50">
-            <div className="flex items-start justify-between pt-6 px-6 lg:px-8">
+            <div className="flex items-end justify-between pt-6 px-6 lg:px-8">
                 <div>
                     <h2 className="text-gray-900 text-lg font-semibold">Exames</h2>
                     <p className="text-gray-500 text-xs">Gerencie seus exames</p>
+                    <div className="flex gap-2 items-end">
+                        <Input 
+                            placeholder="Pesquise pela especialidade" 
+                            onChange={(e) => setSearchTerm(e.target.value)} 
+                            value={searchTerm} 
+                            className="w-96"
+                        />
+                    </div>
                 </div>
-                <Button onClick={() => setCreateForm(true)}>Cadastrar Exame</Button>
+                <Button onClick={() => setOpenCreateExamModal(true)}>Cadastrar Exame</Button>
             </div>
             <div>
                 <Table 
@@ -56,16 +87,25 @@ function Page() {
                             render: (rowData) => renderOptions(rowData.id)
                         }
                     ]}
-                    data={examsData}
+                    data={filteredExams}  // Passa os exames filtrados diretamente
                 />
             </div>
 
-            <Modal open={createForm} onClose={() => setCreateForm(false)}>
+            <Modal open={openCreateExamModal} onClose={() => setOpenCreateExamModal(false)}>
                 <CreateExamForm />
             </Modal>
 
-            <Modal open={updateForm} onClose={() => setUpdateForm(false)}>
+            <Modal open={openUpdateExamModal} onClose={() => setOpenUpdateExamModal(false)}>
                 {selectedExamData && <UpdateExamForm exam={selectedExamData} />}
+            </Modal>
+
+            <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
+                <div className="flex flex-col gap-4 mt-5">
+                    <p className="font-semibold text-lg w-72 text-center">Tem certeza que deseja excluir esse exame?</p>
+                    <Button onClick={() => { deleteExam(idToDelete); setOpenDelete(false); }}>
+                        Confirmar deleção
+                    </Button>
+                </div>
             </Modal>
         </div>
     );

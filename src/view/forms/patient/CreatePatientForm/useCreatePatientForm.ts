@@ -5,10 +5,24 @@ import { PatientContext } from '../../../../@shared/contexts/Patients/PatientCon
 import { useContext } from 'react';
 import { AxiosError } from 'axios';
 import { UsecaseError } from '../../../../@shared/services/@dto/useCaseError';
+import { parse, isValid, format } from 'date-fns';
+
+// Função para validar e formatar a data usando date-fns
+const isValidDate = (dateString: string): boolean => {
+  const parsedDate = parse(dateString, 'ddMMyyyy', new Date());
+  return isValid(parsedDate);
+};
+
+const formatDate = (date: string): string => {
+  const parsedDate = parse(date, 'ddMMyyyy', new Date());
+  return format(parsedDate, 'yyyy-MM-dd');
+};
 
 const schema = z.object({
   cpf: z.string().min(1, "CPF é obrigatório").regex(/^\d{11}$/, "CPF deve conter 11 dígitos"),
-  dateBirthday: z.string(),
+  dateBirthday: z.string().refine((val) => isValidDate(val), {
+    message: "Data de nascimento inválida. O formato correto é DDMMYYYY.",
+  }),
   name: z.string().min(1, "Nome é obrigatório"),
   email: z.string().email("Formato de email inválido").optional(),
   phoneNumber: z.string().min(10, "Número de telefone inválido").optional(),
@@ -30,8 +44,8 @@ export const useCreatePatientForm = () => {
     throw new Error("PatientContext must be used within an ExamProvider");
   }
 
-  const { createPatient } = context;
-  
+  const { createPatient, setOpenCreatePatientModal } = context;
+
   const {
     register,
     handleSubmit,
@@ -44,14 +58,28 @@ export const useCreatePatientForm = () => {
 
   const onSubmit = async (data: PatientFormData) => {
     try {
-      await createPatient.mutateAsync(data);
+      const formattedDate = formatDate(data.dateBirthday);
+      console.log(formattedDate)
+      await createPatient.mutateAsync({
+        ...data,
+        dateBirthday: formattedDate,
+      });
+      setOpenCreatePatientModal(false);
     } catch (e) {
-			if (e instanceof AxiosError) {
-				const error = e as AxiosError<UsecaseError>;
-				const errors = error.response?.data ?? [];
-        console.log({errors})
-			}
-		}
+      if (e instanceof AxiosError) {
+        const error = e as AxiosError<UsecaseError>;
+        // @ts-ignore
+        const errors = error.response?.data.response ?? [];
+
+        if (Array.isArray(errors)) {
+          errors.forEach((err) => {
+            setError(err.path, { message: err.message });
+          });
+        } else if (errors.path) {
+          setError(errors.path, { message: errors.message });
+        }
+      }
+    }
   };
 
   return {

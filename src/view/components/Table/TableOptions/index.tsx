@@ -22,7 +22,7 @@ const TableOptions: React.FC<TableOptionsProps> = ({ options }) => {
   };
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative text-left z-1000">
       <button
         onClick={toggleDropdown}
         className="p-2 rounded-full hover:bg-gray-100 focus:outline-none"
@@ -44,13 +44,13 @@ const TableOptions: React.FC<TableOptionsProps> = ({ options }) => {
       </button>
 
       {isOpen && (
-        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-1000">
-          <div className="py-1 flex flex-col">
+        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+          <div className="py-1 flex flex-col z-30">
             {options.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleOptionClick(option.onClick)}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 z-50"
               >
                 {option.label}
               </button>
