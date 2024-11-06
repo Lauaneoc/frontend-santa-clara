@@ -8,14 +8,14 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ setMobileMenuOpen }) => {
   return (
-    <nav aria-label="Global" className="mx-auto flex max-w-full md:max-w-[80vw] items-center justify-between p-6 lg:px-8">
+    <nav aria-label="Global" className="mx-auto flex max-w-full md:max-w-[79vw] items-center justify-between p-6 py-4 lg:px-8">
       <div className="flex lg:flex-1">
         <a href="#" className="-m-1.5 p-1.5">
           <span className="sr-only">Clínica Santa Clara</span>
           <img
             alt=""
             src="https://santaclaracentromedico.com.br/wp-content/uploads/2023/12/LOGO_SANTA_CLARA3.png"
-            className="h-8 w-auto"
+            className="w-[250px]"
           />
         </a>
       </div>
@@ -30,12 +30,11 @@ const NavBar: React.FC<NavBarProps> = ({ setMobileMenuOpen }) => {
         </button>
       </div>
       <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-        <a href="/" className="text-sm font-semibold leading-6 text-slate-50">Dashboard</a>
+        <a href="/" className="text-md font-semibold leading-6 text-slate-50">Dashboard</a>
         <PopoverMenu />
-        <a href="#" className="text-sm font-semibold leading-6 text-slate-50">bla bla bla</a>
       </PopoverGroup>
       <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-        <a href="#" className="text-sm font-semibold leading-6 text-slate-50">
+        <a href="#" className="text-md font-semibold leading-6 text-slate-50">
           Sair <span aria-hidden="true">&rarr;</span>
         </a>
       </div>

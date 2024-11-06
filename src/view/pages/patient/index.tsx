@@ -8,13 +8,14 @@ import { CreatePatientForm } from "../../forms/patient/CreatePatientForm";
 import { PatientContext, PatientsContextProvider } from "../../../@shared/contexts/Patients/PatientContext";
 import { Input } from "../../components/Input";
 import { toast } from 'react-toastify';
+import { format } from 'date-fns';
 
 function Page() {
     const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
     const [openDelete, setOpenDelete] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [openViewInfo, setOpenViewInfo] = useState(false);  // Estado para abrir o modal de visualização
+    const [openViewInfo, setOpenViewInfo] = useState(false);
 
     const context = useContext(PatientContext);
 
@@ -46,7 +47,7 @@ function Page() {
                     setSelectedPatient(id);
                     setOpenUpdatePatientModal(true); 
                 }},
-                { label: 'Visualizar', onClick: () => handleViewInfo(id) },  // Ação para visualização
+                { label: 'Visualizar', onClick: () => handleViewInfo(id) },
                 { label: 'Excluir', onClick: () => handleDeleteById(id) }
             ]}
         />
@@ -54,7 +55,7 @@ function Page() {
 
     const handleViewInfo = (id: string) => {
         setSelectedPatient(id);
-        setOpenViewInfo(true);  // Abre o modal de visualização
+        setOpenViewInfo(true);
     };
 
     const handleDeleteById = (id: string) => {
@@ -65,8 +66,8 @@ function Page() {
     const selectedPatientData = selectedPatient ? patientsData.find((patient: { id: string; }) => patient.id === selectedPatient) : null;
 
     return (
-        <div className="h-[80vh] rounded-md bg-slate-50">
-            <div className="flex items-end justify-between pt-6 px-6 lg:px-8">
+        <div className="h-[80vh] rounded-md bg-white">
+            <div className="flex flex-col md:flex-row items-start md:items-end justify-between pt-6 px-6 lg:px-8 ">
                 <div>
                     <h2 className="text-gray-900 text-lg font-semibold">Pacientes</h2>
                     <p className="text-gray-500 text-xs">Gerencie os pacientes cadastrados</p>
@@ -75,7 +76,7 @@ function Page() {
                             placeholder="Pesquise pelo CPF" 
                             onChange={(e) => setSearchTerm(e.target.value)} 
                             value={searchTerm} 
-                            className="w-96"
+                            className="w-auto  md:w-96"
                         />
                     </div>
                 </div>
@@ -87,7 +88,11 @@ function Page() {
                         { header: 'Código do Paciente', key: 'id' },
                         { header: 'CPF', key: 'cpf' },
                         { header: 'Nome', key: 'name' },
-                        { header: 'Data de aniversário', key: 'dateBirthday' },
+                        { 
+                            header: 'Data de aniversário', 
+                            key: 'dateBirthday',
+                            render: (rowData) => format(new Date(rowData.dateBirthday), 'dd/MM/yyyy')
+                        },
                         { header: 'Email', key: 'email' },
                         { header: 'CEP', key: 'cep' },
                         { 
@@ -96,7 +101,7 @@ function Page() {
                             render: (rowData) => renderOptions(rowData.id)
                         }
                     ]}
-                    data={filteredPatients}  // Passa os pacientes filtrados
+                    data={filteredPatients}
                 />
             </div>
 
@@ -109,7 +114,7 @@ function Page() {
             </Modal>
 
             <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
-                <div className="flex flex-col gap-4 mt-5 w-[35vw] justify-center">
+                <div className="flex flex-col gap-4 mt-5 w-[20vw] justify-center">
                     <p className="font-semibold text-lg w-full text-center">Tem certeza que deseja excluir esse paciente?</p>
                     <Button onClick={() => { deletePatient(idToDelete); setOpenDelete(false); toast.success('Paciente excluído com sucesso!')}}>
                         Confirmar deleção
@@ -117,7 +122,6 @@ function Page() {
                 </div>
             </Modal>
 
-            {/* Modal para visualização do paciente */}
             <Modal position={'center'} open={openViewInfo} onClose={() => setOpenViewInfo(false)}>
                 <div className="flex flex-col gap-4 mt-5 w-[35vw]">
                     <div className="flex gap-4">

@@ -50,7 +50,7 @@ const TableOptions: React.FC<TableOptionsProps> = ({ options }) => {
               <button
                 key={index}
                 onClick={() => handleOptionClick(option.onClick)}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 z-50"
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 {option.label}
               </button>

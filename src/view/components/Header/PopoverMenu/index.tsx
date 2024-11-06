@@ -5,7 +5,7 @@ import { management } from '../data';
 const PopoverMenu: React.FC = () => {
   return (
     <Popover className="relative">
-      <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-50">
+      <PopoverButton className="flex items-center gap-x-1 text-md font-semibold leading-6 text-gray-50">
             Gestão
         <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-50" />
       </PopoverButton>

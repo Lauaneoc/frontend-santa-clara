@@ -42,41 +42,64 @@ export const UpdatePatientForm = ({ patient }: UpdatePatientFormProps) => {
           type="tel"
           error={errors.phoneNumber?.message}
         />
-        <Input
-          {...register("cep")}
-          label="CEP"
-          error={errors.cep?.message}
-        />
-        <Input
-          {...register("street")}
-          label="Rua"
-          error={errors.street?.message}
-        />
-        <Input
-          {...register("number")}
-          label="Número"
-          error={errors.number?.message}
-        />
-        <Input
-          {...register("complement")}
-          label="Complemento"
-          error={errors.complement?.message}
-        />
-        <Input
-          {...register("neighborhood")}
-          label="Bairro"
-          error={errors.neighborhood?.message}
-        />
-        <Input
-          {...register("city")}
-          label="Cidade"
-          error={errors.city?.message}
-        />
+
+        <div className="flex gap-4">
+          <div className="w-1/2">
+            <Input
+              {...register("cep")}
+              label="CEP"
+              error={errors.cep?.message}
+            />
+          </div>
+          <div className="w-1/2">
+            <Input
+              {...register("street")}
+              label="Rua"
+              error={errors.street?.message}
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <div className="w-1/2">
+            <Input
+              {...register("number")}
+              label="Número"
+              error={errors.number?.message}
+            />
+          </div>
+          <div className="w-1/2">
+            <Input
+              {...register("complement")}
+              label="Complemento"
+              error={errors.complement?.message}
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <div className="w-1/2">
+            <Input
+              {...register("neighborhood")}
+              label="Bairro"
+              error={errors.neighborhood?.message}
+            />
+          </div>
+          <div className="w-1/2">
+            <Input
+              {...register("city")}
+              label="Cidade"
+              error={errors.city?.message}
+            />
+          </div>
+        </div>
+
         <Input
           {...register("state")}
           label="Estado"
           error={errors.state?.message}
         />
+
         <Button type="submit">
           Salvar
         </Button>

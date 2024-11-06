@@ -66,8 +66,8 @@ function Page() {
         );
 
     return (
-        <div className="h-[80vh] rounded-md bg-slate-50">
-            <div className="flex items-end justify-between pt-6 px-6 lg:px-8">
+        <div className="h-[80vh] rounded-md bg-white">
+            <div className="flex flex-col md:flex-row items-start md:items-end justify-between pt-6 px-6 lg:px-8 ">
                 <div>
                     <h2 className="text-gray-900 text-lg font-semibold">Exames</h2>
                     <p className="text-gray-500 text-xs">Gerencie seus exames</p>
@@ -76,7 +76,7 @@ function Page() {
                             placeholder="Pesquise pela especialidade" 
                             onChange={(e) => setSearchTerm(e.target.value)} 
                             value={searchTerm} 
-                            className="w-96"
+                            className="w-auto  md:w-96"
                         />
                     </div>
                 </div>
@@ -107,7 +107,7 @@ function Page() {
             </Modal>
 
             <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
-                <div className="flex flex-col gap-4 mt-5 w-[35vw] justify-center">
+                <div className="flex flex-col gap-4 mt-5 w-[20vw] justify-center">
                     <p className="font-semibold text-lg w-full text-center">Tem certeza que deseja excluir esse exame?</p>
                     <Button onClick={() => { deleteExam(idToDelete); setOpenDelete(false); toast.success('Exame excluído com sucesso!') }}>
                         Confirmar deleção
