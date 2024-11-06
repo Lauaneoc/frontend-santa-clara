@@ -14,6 +14,7 @@ function Page() {
     const [openDelete, setOpenDelete] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [openViewInfo, setOpenViewInfo] = useState(false);
 
     const context = useContext(ExamContext);
 
@@ -27,7 +28,7 @@ function Page() {
         openCreateExamModal,
         setOpenCreateExamModal, 
         setOpenUpdateExamModal, 
-        openUpdateExamModal 
+        openUpdateExamModal,
     } = context;
 
     const examsData = fetchExams.data || [];
@@ -40,10 +41,16 @@ function Page() {
                     setSelectedExam(id);
                     setOpenUpdateExamModal(true); 
                 }},
-                { label: 'Excluir', onClick: () => handleDeleteById(id) }
+                { label: 'Visualizar', onClick: () => handleViewInfo(id) },
+                { label: 'Excluir', onClick: () => handleDeleteById(id) },
             ]}
         />
     );
+
+    const handleViewInfo = (id: string) => {
+        setSelectedExam(id);
+        setOpenViewInfo(true);
+    }
 
     const handleDeleteById = (id: string) => {
         setIdToDelete(id);
@@ -52,7 +59,6 @@ function Page() {
 
     const selectedExamData = selectedExam ? examsData.find((exam: { id: string; }) => exam.id === selectedExam) : null;
 
-    // Função de filtragem direta (sem useEffect)
     const filteredExams = searchTerm.trim() === ''
         ? examsData
         : examsData.filter((exam: { specialty: string; }) => 
@@ -88,7 +94,7 @@ function Page() {
                             render: (rowData) => renderOptions(rowData.id)
                         }
                     ]}
-                    data={filteredExams}  // Passa os exames filtrados diretamente
+                    data={filteredExams}
                 />
             </div>
 
@@ -101,14 +107,20 @@ function Page() {
             </Modal>
 
             <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
-                <div className="flex flex-col gap-4 mt-5">
-                    <p className="font-semibold text-lg w-72 text-center">Tem certeza que deseja excluir esse exame?</p>
+                <div className="flex flex-col gap-4 mt-5 w-[35vw] justify-center">
+                    <p className="font-semibold text-lg w-full text-center">Tem certeza que deseja excluir esse exame?</p>
                     <Button onClick={() => { deleteExam(idToDelete); setOpenDelete(false); toast.success('Exame excluído com sucesso!') }}>
                         Confirmar deleção
                     </Button>
                 </div>
             </Modal>
 
+            <Modal position={'center'} open={openViewInfo} onClose={() => setOpenViewInfo(false)}>
+                <div className="flex flex-col gap-4 mt-5 w-[35vw]">
+                    <Input label="Especialidade" disabled value={selectedExamData?.specialty}/>
+                    <Input label="Categoria" disabled value={selectedExamData?.category}/>
+                </div>
+            </Modal>
         </div>
     );
 }
