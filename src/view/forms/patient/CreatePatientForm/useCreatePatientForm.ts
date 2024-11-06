@@ -1,28 +1,35 @@
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { PatientContext } from '../../../../@shared/contexts/Patients/PatientContext';
-import { useContext } from 'react';
-import { AxiosError } from 'axios';
-import { UsecaseError } from '../../../../@shared/services/@dto/useCaseError';
-import { parse, isValid, format } from 'date-fns';
-import { toast } from 'react-toastify';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PatientContext } from "../../../../@shared/contexts/Patients/PatientContext";
+import { useContext } from "react";
+import { AxiosError } from "axios";
+import { UsecaseError } from "../../../../@shared/services/@dto/useCaseError";
+import { parse, isValid, format } from "date-fns";
+import { toast } from "react-toastify";
 
 // Função para validar e formatar a data usando date-fns
 const isValidDate = (dateString: string): boolean => {
-  const parsedDate = parse(dateString, 'ddMMyyyy', new Date());
+  const parsedDate = parse(dateString, "dd/MM/yyyy", new Date());
   return isValid(parsedDate);
 };
 
 const formatDate = (date: string): string => {
-  const parsedDate = parse(date, 'ddMMyyyy', new Date());
-  return format(parsedDate, 'yyyy-MM-dd');
+  const parsedDate = parse(date, "dd/MM/yyyy", new Date());
+  return format(parsedDate, "yyyy-MM-dd");
 };
 
 const schema = z.object({
-  cpf: z.string().min(1, "CPF é obrigatório").regex(/^\d{11}$/, "CPF deve conter 11 dígitos"),
+  cpf: z
+    .string()
+    .min(1, "CPF é obrigatório")
+    .regex(
+      /^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/,
+      "CPF deve estar no formato XXX.XXX.XXX-XX ou conter apenas 11 dígitos"
+    ),
+
   dateBirthday: z.string().refine((val) => isValidDate(val), {
-    message: "Data de nascimento inválida. O formato correto é DDMMYYYY.",
+    message: "Data de nascimento inválida. O formato correto é DD/MM/YYYY.",
   }),
   name: z.string().min(1, "Nome é obrigatório"),
   email: z.string().email("Formato de email inválido").optional(),
@@ -33,7 +40,11 @@ const schema = z.object({
   complement: z.string().optional(),
   neighborhood: z.string().min(1, "Bairro é obrigatório").optional(),
   city: z.string().min(1, "Cidade é obrigatória").optional(),
-  state: z.string().min(2, "Estado é obrigatório").max(2, "Estado deve conter 2 letras").optional(),
+  state: z
+    .string()
+    .min(2, "Estado é obrigatório")
+    .max(2, "Estado deve conter 2 letras")
+    .optional(),
 });
 
 type PatientFormData = z.infer<typeof schema>;
@@ -60,13 +71,13 @@ export const useCreatePatientForm = () => {
   const onSubmit = async (data: PatientFormData) => {
     try {
       const formattedDate = formatDate(data.dateBirthday);
-      console.log(formattedDate)
+      console.log(formattedDate);
       await createPatient.mutateAsync({
         ...data,
         dateBirthday: formattedDate,
       });
       setOpenCreatePatientModal(false);
-      toast.success('Paciente cadastrado com sucesso');
+      toast.success("Paciente cadastrado com sucesso");
     } catch (e) {
       if (e instanceof AxiosError) {
         const error = e as AxiosError<UsecaseError>;
@@ -89,6 +100,6 @@ export const useCreatePatientForm = () => {
     handleSubmit,
     watch,
     errors,
-    onSubmit
+    onSubmit,
   };
 };
