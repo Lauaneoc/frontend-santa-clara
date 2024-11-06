@@ -7,6 +7,7 @@ import { Modal } from "../../components/Modal";
 import TableOptions from "../../components/Table/TableOptions";
 import { UpdateExamForm } from "../../forms/exam/UpdateExamForm";
 import { Input } from "../../components/Input";
+import { toast } from 'react-toastify';
 
 function Page() {
     const [selectedExam, setSelectedExam] = useState<string | null>(null);
@@ -91,22 +92,23 @@ function Page() {
                 />
             </div>
 
-            <Modal open={openCreateExamModal} onClose={() => setOpenCreateExamModal(false)}>
+            <Modal open={openCreateExamModal} position={'center'} className="w-96" onClose={() => setOpenCreateExamModal(false)}>
                 <CreateExamForm />
             </Modal>
 
-            <Modal open={openUpdateExamModal} onClose={() => setOpenUpdateExamModal(false)}>
+            <Modal open={openUpdateExamModal} position={'center'} className="w-96" onClose={() => setOpenUpdateExamModal(false)}>
                 {selectedExamData && <UpdateExamForm exam={selectedExamData} />}
             </Modal>
 
             <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
                 <div className="flex flex-col gap-4 mt-5">
                     <p className="font-semibold text-lg w-72 text-center">Tem certeza que deseja excluir esse exame?</p>
-                    <Button onClick={() => { deleteExam(idToDelete); setOpenDelete(false); }}>
+                    <Button onClick={() => { deleteExam(idToDelete); setOpenDelete(false); toast.success('Exame excluído com sucesso!') }}>
                         Confirmar deleção
                     </Button>
                 </div>
             </Modal>
+
         </div>
     );
 }

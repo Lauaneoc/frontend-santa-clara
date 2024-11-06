@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { AxiosError } from 'axios';
 import { UsecaseError } from '../../../../@shared/services/@dto/useCaseError';
 import { parse, isValid, format } from 'date-fns';
+import { toast } from 'react-toastify';
 
 // Função para validar e formatar a data usando date-fns
 const isValidDate = (dateString: string): boolean => {
@@ -65,6 +66,7 @@ export const useCreatePatientForm = () => {
         dateBirthday: formattedDate,
       });
       setOpenCreatePatientModal(false);
+      toast.success('Paciente cadastrado com sucesso');
     } catch (e) {
       if (e instanceof AxiosError) {
         const error = e as AxiosError<UsecaseError>;

@@ -7,12 +7,13 @@ import { UpdatePatientForm } from "../../forms/patient/UpdatePatientForm";
 import { CreatePatientForm } from "../../forms/patient/CreatePatientForm";
 import { PatientContext, PatientsContextProvider } from "../../../@shared/contexts/Patients/PatientContext";
 import { Input } from "../../components/Input";
+import { toast } from 'react-toastify';
 
 function Page() {
     const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
     const [openDelete, setOpenDelete] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string>('');
-    const [searchTerm, setSearchTerm] = useState<string>('');  // Estado para o termo de busca
+    const [searchTerm, setSearchTerm] = useState<string>('');
 
     const context = useContext(PatientContext);
 
@@ -23,11 +24,10 @@ function Page() {
     const { fetchPatients, deletePatient, setOpenCreatePatientModal, setOpenUpdatePatientModal, openCreatePatientModal, openUpdatePatientModal } = context;
     const patientsData = fetchPatients.data || [];
 
-    // Função de filtragem direta por CPF
     const filteredPatients = searchTerm.trim() === ''
         ? patientsData
         : patientsData.filter((patient: { cpf: string; }) =>
-            patient.cpf.includes(searchTerm.trim())  // Filtra pacientes pelo CPF
+            patient.cpf.includes(searchTerm.trim())
         );
 
     const renderOptions = (id: string) => (
@@ -96,7 +96,7 @@ function Page() {
             <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
                 <div className="flex flex-col gap-4 mt-5">
                     <p className="font-semibold text-lg w-72 text-center">Tem certeza que deseja excluir esse paciente?</p>
-                    <Button onClick={() => { deletePatient(idToDelete); setOpenDelete(false); }}>
+                    <Button onClick={() => { deletePatient(idToDelete); setOpenDelete(false); toast.success('Paciente excluído com sucesso!')}}>
                         Confirmar deleção
                     </Button>
                 </div>

@@ -6,7 +6,7 @@ import { ExamContext } from '../../../../@shared/contexts/Exams/ExamContext';
 import { useContext } from 'react';
 import { AxiosError } from 'axios';
 import { UsecaseError } from '../../../../@shared/services/@dto/useCaseError';
-import ts from 'typescript';
+import { toast } from 'react-toastify';
 
 // Esquema de validação com Zod
 const schema = z.object({
@@ -39,6 +39,7 @@ export const useCreateExamForm = () => {
     try {
       await createExam.mutateAsync(data);
       setOpenCreateExamModal(false);
+      toast.success('Exame criado com sucesso');
     } catch (e) {
       if (e instanceof AxiosError) {
         const error = e as AxiosError<UsecaseError>;
