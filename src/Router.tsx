@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { ExamPage } from './view/pages/Exam';
 import { DefaultLayout } from './view/DefaultLayout';
 import { PatientPage } from './view/pages/patient';
+import { DoctorPage } from './view/pages/doctor';
 
 
 export function Router() {
@@ -19,6 +20,10 @@ export function Router() {
               path='patient'
               element={<PatientPage />} 
             />
+            <Route
+            index
+            path='doctor'
+            element={<DoctorPage />} />
         </Route>
     </Routes>
   );
