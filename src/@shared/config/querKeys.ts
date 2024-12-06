@@ -9,4 +9,7 @@ export const queryKeys = {
   DOCTOR: {
     FIND_MANY: "findManyDoctors" as const,
   },
+  ENTERPRISE: {
+    FIND_MANY: "findManyEnterprises" as const,
+  },
 };

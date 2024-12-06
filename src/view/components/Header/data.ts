@@ -10,7 +10,7 @@ export const management = [
   {
     name: "Empresas",
     description: "Gerencie as informações das empresas.",
-    href: "#",
+    href: "enterprise",
     icon: BuildingLibraryIcon,
   },
   {
