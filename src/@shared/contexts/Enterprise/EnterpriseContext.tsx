@@ -38,19 +38,11 @@ export const EnterprisesContextProvider: React.FC<
   const queryClient = useQueryClient();
 
   const fetchEnterprises = useQuery({
-    queryKey: [
-      queryKeys.ENTERPRISE.FIND_MANY,
-      state[queryKeys.ENTERPRISE.FIND_MANY],
-    ],
-    queryFn: () => EnterpriseService.getEnterprises,
+    queryKey: [queryKeys.ENTERPRISE.FIND_MANY, state[queryKeys.ENTERPRISE.FIND_MANY]],
+    queryFn: () => EnterpriseService.getEnterprises(),
     staleTime: Infinity,
     enabled: true,
-  });
-
-  if (fetchEnterprises.isError) {
-    toast.error("Erro ao carregar as empresas.");
-    console.error(fetchEnterprises.error);
-  }
+});
 
   const createEnterprise = useMutation({
     mutationFn: (enterpriseData: Enterprise) =>
