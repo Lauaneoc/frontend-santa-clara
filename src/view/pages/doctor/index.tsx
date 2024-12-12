@@ -20,6 +20,19 @@ function Page() {
   const [openDelete, setOpenDelete] = useState(false);
   const [openViewInfo, setOpenViewInfo] = useState(false);
 
+  if (!context) {
+    return <div>Loading...</div>;
+  }
+  
+  const {
+    fetchDoctors,
+    deleteDoctor,
+    setOpenCreateDoctorModal,
+    setOpenUpdateDoctorModal,
+    openCreateDoctorModal,
+    openUpdateDoctorModal,
+  } = context;
+  
   const handleDeleteById = (id: string) => {
     setIdToDelete(id);
     setOpenDelete(true);
@@ -29,19 +42,6 @@ function Page() {
     setSelectedDoctor(id);
     setOpenViewInfo(true);
   };
-
-  if (!context) {
-    return <div>Loading...</div>;
-  }
-
-  const {
-    fetchDoctors,
-    deleteDoctor,
-    setOpenCreateDoctorModal,
-    setOpenUpdateDoctorModal,
-    openCreateDoctorModal,
-    openUpdateDoctorModal,
-  } = context;
 
   const doctorsData = fetchDoctors.data || [];
 
@@ -77,9 +77,10 @@ function Page() {
   const selectedDoctorData = selectedDoctor
     ? doctorsData.find((doctor: { id: string }) => doctor.id === selectedDoctor)
     : null;
+
   return (
-    <div className="h-[80vh] bg-white rounded-md">
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between pt-6 px-6 lg:px-8">
+    <div className=" bg-white rounded-md ">
+      <div className="flex flex-col md:flex-row items-start md:items-end justify-between py-6 px-6 lg:px-8">
         <div>
           <h2 className="text-gray-900 text-lg font-semibold">Médicos</h2>
           <p className="text-gray-500 text-xs">
@@ -98,7 +99,7 @@ function Page() {
           Cadastrar Médico
         </Button>
       </div>
-      <div>
+      <div className="h-[55vh]">
         <Table
           columns={[
             { header: "Código de Médico", key: "id" },
@@ -142,7 +143,7 @@ function Page() {
             onClick={() => {
               deleteDoctor(idToDelete);
               setOpenDelete(false);
-              toast.success("Paciente excluído com sucesso!");
+              toast.success("Médico excluído com sucesso!");
             }}
           >
             Confirmar deleção

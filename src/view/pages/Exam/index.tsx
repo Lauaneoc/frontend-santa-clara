@@ -66,7 +66,7 @@ function Page() {
         );
 
     return (
-        <div className="h-[80vh] rounded-md bg-white">
+        <div className="rounded-md bg-white">
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between pt-6 px-6 lg:px-8 ">
                 <div>
                     <h2 className="text-gray-900 text-lg font-semibold">Exames</h2>
@@ -82,7 +82,7 @@ function Page() {
                 </div>
                 <Button onClick={() => setOpenCreateExamModal(true)}>Cadastrar Exame</Button>
             </div>
-            <div>
+            <div className="h-[55vh]">
                 <Table 
                     columns={[
                         { header: 'Código do exame', key: 'id' },

@@ -6,9 +6,19 @@ import {
   EnterprisesContextProvider,
 } from "../../../@shared/contexts/Enterprise/EnterpriseContext";
 import { Table } from "../../components/Table";
+import { Button } from "../../components/Button";
+import { Modal } from "../../components/Modal";
+import { CreateEnterpriseForm } from "../../forms/enterprise/CreateEnterpriseForm";
+import { UpdateEnterpriseForm } from "../../forms/enterprise/UpdateEnterpriseForm";
+import toast from "react-hot-toast";
+import TableOptions from "../../components/Table/TableOptions";
 
 function Page() {
+  const [selectedEnterprise, setSelectedEnterprise] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [openDelete, setOpenDelete] = useState(false);
+  const [idToDelete, setIdToDelete] = useState<string>("");		
+  const [openViewInfo, setOpenViewInfo] = useState(false);
   const context = useContext(EnterpriseContext);
 
   if (!context) {
@@ -24,20 +34,16 @@ function Page() {
     openUpdateEnterpriseModal,
   } = context;
 
-  const mockData = [
-    {
-      cnpj: "12345678901234",
-      legalName: "Empresa X",
-      email: "email@empresa.com",
-      telephone: "123456789",
-    },
-    {
-      cnpj: "98765432109876",
-      legalName: "Empresa Y",
-      email: "contato@empresa.com",
-      telephone: "987654321",
-    },
-  ];
+  
+  const handleDeleteById = (id: string) => {
+    setIdToDelete(id);
+    setOpenDelete(true);
+  };
+
+  const handleViewInfo = (id: string) => {
+    setSelectedEnterprise(id);
+    setOpenViewInfo(true);
+  };
 
   const enterpriseData = fetchEnterprises.data || [];
   console.log("aqui " + fetchEnterprises.data);
@@ -49,34 +55,34 @@ function Page() {
           enterprise.cnpj.includes(searchTerm.trim())
         );
 
-  //   const renderOptions = (id: string) => (
-  //     <TableOptions
-  //       options={[
-  //         {
-  //           label: "Atualizar",
-  //           onClick: () => {
-  //             setSelectedDoctor(id);
-  //             setOpenUpdateDoctorModal(true);
-  //           },
-  //         },
-  //         {
-  //           label: "Visualizar",
-  //           onClick: () => handleViewInfo(id),
-  //         },
-  //         {
-  //           label: "Excluir",
-  //           onClick: () => handleDeleteById(id),
-  //         },
-  //       ]}
-  //     />
-  //   );
+     const renderOptions = (id: string) => (
+       <TableOptions
+         options={[
+           {
+             label: "Atualizar",
+             onClick: () => {
+               setSelectedEnterprise(id);
+               setOpenUpdateEnterpriseModal(true);
+             },
+           },
+           {
+             label: "Visualizar",
+             onClick: () => handleViewInfo(id),
+           },
+           {
+             label: "Excluir",
+             onClick: () => handleDeleteById(id),
+           },
+         ]}
+       />
+     );
 
-  //   const selectedDoctorData = selectedDoctor
-  //     ? doctorsData.find((doctor: { id: string }) => doctor.id === selectedDoctor)
-  //     : null;
+     const selectedEnterpriseData = selectedEnterprise
+       ? enterpriseData.find((enterprise: { id: string }) => enterprise.id === selectedEnterprise)
+       : null;
 
   return (
-    <div className="h-[80vh] bg-white rounded-md">
+    <div className=" bg-white rounded-md">
       <div className="flex flex-col md:flex-row items-start md:items-end justify-between pt-6 px-6 lg:px-8">
         <div>
           <h2 className="text-gray-900 text-lg font-semibold">Empresa</h2>
@@ -92,38 +98,39 @@ function Page() {
             />
           </div>
         </div>
-        {/* <Button onClick={() => setOpenCreateDoctorModal(true)}>
+        <Button onClick={() => setOpenCreateEnterpriseModal(true)}>
           Cadastrar Empresa
-        </Button> */}
+        </Button> 
       </div>
-      <div>
+      <div className="h-[55vh]">
         <Table
           columns={[
+            { header: "Código", key: "id" },
             { header: "CNPJ", key: "cnpj" },
             { header: "Razão Social", key: "legalName" },
             { header: "Email", key: "email" },
-            // {
-            //   header: "",
-            //   key: "options",
-            //   render: (rowData) => renderOptions(rowData.id),
-            // },
+            {
+              header: "",
+              key: "options",
+              render: (rowData) => renderOptions(rowData.id),
+            },
           ]}
-          data={mockData}
+          data={filteredEnterprise}
         />
       </div>
-      {/* 
+      
       <Modal
-        open={openCreateDoctorModal}
-        onClose={() => setOpenCreateDoctorModal(false)}
+        open={openCreateEnterpriseModal}
+        onClose={() => setOpenCreateEnterpriseModal(false)}
       >
-        <CreateDoctorForm />
+        <CreateEnterpriseForm />
       </Modal>
 
       <Modal
-        open={openUpdateDoctorModal}
-        onClose={() => setOpenUpdateDoctorModal(false)}
+        open={openUpdateEnterpriseModal}
+        onClose={() => setOpenUpdateEnterpriseModal(false)}
       >
-        {selectedDoctor && <UpdateDoctorForm doctor={selectedDoctorData} />}
+        {selectedEnterprise && <UpdateEnterpriseForm  />}
       </Modal>
       <Modal
         position={"center"}
@@ -132,13 +139,13 @@ function Page() {
       >
         <div className="flex flex-col gap-4 mt-5 w-[20vw] justify-center">
           <p className="font-semibold text-lg w-full text-center">
-            Tem certeza que deseja excluir esse médico?
+            Tem certeza que deseja excluir essa empresa?
           </p>
           <Button
             onClick={() => {
-              deleteDoctor(idToDelete);
+              deleteEnterprise(idToDelete);
               setOpenDelete(false);
-              toast.success("Paciente excluído com sucesso!");
+              toast.success("Empresa excluída com sucesso!");
             }}
           >
             Confirmar deleção
@@ -152,18 +159,9 @@ function Page() {
         onClose={() => setOpenViewInfo(false)}
       >
         <div className="flex flex-col gap-4 mt-5 w-[35vw]">
-          <div className="flex gap-4">
-            <Input label="CRM" disabled value={selectedDoctorData?.crm} />
-            <Input label="Nome" disabled value={selectedDoctorData?.name} />
-          </div>
-          <Input label="Email" disabled value={selectedDoctorData?.email} />
-          <Input
-            label="Telefone"
-            disabled
-            value={selectedDoctorData?.telephone}
-          />
+          <p>visualização empresa</p>
         </div>
-      </Modal> */}
+      </Modal>
     </div>
   );
 }

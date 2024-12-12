@@ -9,6 +9,7 @@ import { PatientContext, PatientsContextProvider } from "../../../@shared/contex
 import { Input } from "../../components/Input";
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
+import { EnterprisesContextProvider } from "../../../@shared/contexts/Enterprise/EnterpriseContext";
 
 function Page() {
     const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
@@ -66,7 +67,7 @@ function Page() {
     const selectedPatientData = selectedPatient ? patientsData.find((patient: { id: string; }) => patient.id === selectedPatient) : null;
 
     return (
-        <div className="h-[80vh] rounded-md bg-white">
+        <div className="rounded-md bg-white">
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between pt-6 px-6 lg:px-8 ">
                 <div>
                     <h2 className="text-gray-900 text-lg font-semibold">Pacientes</h2>
@@ -82,7 +83,7 @@ function Page() {
                 </div>
                 <Button onClick={() => setOpenCreatePatientModal(true)}>Cadastrar Paciente</Button>
             </div>
-            <div>
+            <div className="h-full">
                 <Table 
                     columns={[
                         { header: 'Código do Paciente', key: 'id' },
@@ -149,8 +150,10 @@ function Page() {
 
 export function PatientPage() {
     return (
-        <PatientsContextProvider>
-            <Page />
-        </PatientsContextProvider>
+        <EnterprisesContextProvider>
+            <PatientsContextProvider>
+                <Page />
+            </PatientsContextProvider>
+        </EnterprisesContextProvider>
     );
 }
