@@ -130,7 +130,7 @@ function Page() {
         open={openUpdateEnterpriseModal}
         onClose={() => setOpenUpdateEnterpriseModal(false)}
       >
-        {selectedEnterprise && <UpdateEnterpriseForm  />}
+        {selectedEnterprise && <UpdateEnterpriseForm enterprise={selectedEnterpriseData}  />}
       </Modal>
       <Modal
         position={"center"}
