@@ -13,7 +13,7 @@ interface TableProps<T> {
 
 export function Table<T>({ data, columns, onRowClick }: TableProps<T>) {
   return (
-      <div className="px-4 sm:px-6 lg:px-8">
+      <div className="px-4 sm:px-6 lg:px-8 overflow-auto h-[55vh]">
           <div className="mt-8 flow-root">
               <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                   <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -61,7 +61,7 @@ function TableRow<T>({ item, columns, onRowClick }: TableRowProps<T>) {
   return (
       <tr onClick={() => onRowClick && onRowClick(item)} className="cursor-pointer hover:bg-gray-100">
           {columns.map((column) => (
-              <td key={String(column.key)} className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <td key={String(column.key)} className="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
                   {column.render ? column.render(item) : String(item[column.key])}
               </td>
           ))}
