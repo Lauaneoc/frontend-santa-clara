@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 import { UsecaseError } from "../../../../@shared/services/@dto/useCaseError";
 import { parse, isValid, format } from "date-fns";
 import { toast } from "react-toastify";
+import { EnterpriseContext } from "../../../../@shared/contexts/Enterprise/EnterpriseContext";
 
 // Função para validar e formatar a data usando date-fns
 const isValidDate = (dateString: string): boolean => {
@@ -51,6 +52,9 @@ type PatientFormData = z.infer<typeof schema>;
 
 export const useCreatePatientForm = () => {
   const context = useContext(PatientContext);
+  const contextEnterprise = useContext(EnterpriseContext);
+
+  const enterprises =  contextEnterprise?.fetchEnterprises;
 
   if (!context) {
     throw new Error("PatientContext must be used within an ExamProvider");
@@ -101,5 +105,6 @@ export const useCreatePatientForm = () => {
     watch,
     errors,
     onSubmit,
+    enterprises
   };
 };

@@ -1,14 +1,24 @@
+import { Enterprise } from '../../../../@shared/interfaces/models/Enterprise';
 import { Button } from '../../../components/Button';
+import ComboBox from '../../../components/Combobox';
 import { Input } from '../../../components/Input';
 import { useCreatePatientForm } from './useCreatePatientForm';
 
 export const CreatePatientForm = () => {
-  const { register, handleSubmit, errors, onSubmit } = useCreatePatientForm();
+  const { register, handleSubmit, errors, onSubmit, enterprises } = useCreatePatientForm();
+
+  console.log({enterprises})
 
   return (
     <div className="py-6">
       <h2 className="text-lg font-semibold mb-4 text-slate-700 font-inter">Cadastrar Paciente</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <ComboBox 
+          label='Empresa' 
+          options={enterprises.data} 
+          getExtractorLabel={(option: Enterprise) => option.legalName} 
+          onChange={() => {}} 
+        />
         <Input
           {...register("cpf")}
           label="CPF"
