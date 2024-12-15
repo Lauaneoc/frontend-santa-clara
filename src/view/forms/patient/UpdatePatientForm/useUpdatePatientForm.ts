@@ -8,6 +8,7 @@ import { AxiosError } from "axios";
 import { UsecaseError } from "../../../../@shared/services/@dto/useCaseError";
 import { parse, isValid, format } from "date-fns";
 import { toast } from "react-toastify";
+import { EnterpriseContext } from "../../../../@shared/contexts/Enterprise/EnterpriseContext";
 
 // Função para validar e formatar a data usando date-fns
 const isValidDate = (dateString: string): boolean => {
@@ -28,6 +29,7 @@ const schema = z.object({
   dateBirthday: z.string().refine((val) => isValidDate(val), {
     message: "Data de nascimento inválida. O formato correto é DD/MM/YYYY.",
   }),
+  id_enterprise: z.number(),
   name: z.string().min(1, "Nome é obrigatório"),
   email: z.string().email("Formato de email inválido").optional(),
   phoneNumber: z.string().min(10, "Número de telefone inválido").optional(),
@@ -49,10 +51,14 @@ type PatientFormData = z.infer<typeof schema>;
 export const useUpdatePatientForm = (patient: Patient) => {
   const context = useContext(PatientContext);
 
+  const contextEnterprise = useContext(EnterpriseContext);
+  const enterprises =  contextEnterprise?.fetchEnterprises;
+
   if (!context) {
     throw new Error("PatientContext must be used within an ExamProvider");
   }
 
+  console.log({patient})
   const { updatePatient, setOpenUpdatePatientModal } = context;
 
   const {
@@ -60,6 +66,7 @@ export const useUpdatePatientForm = (patient: Patient) => {
     handleSubmit,
     watch,
     setError,
+    control,
     formState: { errors },
   } = useForm<PatientFormData>({
     resolver: zodResolver(schema),
@@ -76,6 +83,7 @@ export const useUpdatePatientForm = (patient: Patient) => {
       neighborhood: patient.neighborhood,
       city: patient.city,
       state: patient.state,
+      id_enterprise: Number(patient.enterprise.id), 
     },
   });
 
@@ -112,5 +120,7 @@ export const useUpdatePatientForm = (patient: Patient) => {
     watch,
     errors,
     onSubmit,
+    control,
+    enterprises
   };
 };

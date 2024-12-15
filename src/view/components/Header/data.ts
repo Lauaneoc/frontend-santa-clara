@@ -22,7 +22,7 @@ export const management = [
   {
     name: "Agendamentos",
     description: "Gerencie os agendamentos de consultas.",
-    href: "#",
+    href: "scheduling",
     icon: CalendarIcon,
   },
   {

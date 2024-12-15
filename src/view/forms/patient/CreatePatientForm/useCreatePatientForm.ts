@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { number, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PatientContext } from "../../../../@shared/contexts/Patients/PatientContext";
 import { useContext } from "react";
@@ -29,9 +29,10 @@ const schema = z.object({
       "CPF deve estar no formato XXX.XXX.XXX-XX ou conter apenas 11 dígitos"
     ),
 
-  dateBirthday: z.string().refine((val) => isValidDate(val), {
+  dateBirthday: z.string().refine((val: string) => isValidDate(val), {
     message: "Data de nascimento inválida. O formato correto é DD/MM/YYYY.",
   }),
+  id_enterprise: z.number(),
   name: z.string().min(1, "Nome é obrigatório"),
   email: z.string().email("Formato de email inválido").optional(),
   phoneNumber: z.string().min(10, "Número de telefone inválido").optional(),
@@ -52,8 +53,8 @@ type PatientFormData = z.infer<typeof schema>;
 
 export const useCreatePatientForm = () => {
   const context = useContext(PatientContext);
+  
   const contextEnterprise = useContext(EnterpriseContext);
-
   const enterprises =  contextEnterprise?.fetchEnterprises;
 
   if (!context) {
@@ -66,6 +67,7 @@ export const useCreatePatientForm = () => {
     register,
     handleSubmit,
     watch,
+    control,
     setError,
     formState: { errors },
   } = useForm<PatientFormData>({
@@ -78,7 +80,7 @@ export const useCreatePatientForm = () => {
       console.log(formattedDate);
       await createPatient.mutateAsync({
         ...data,
-        dateBirthday: formattedDate,
+        dateBirthday: formattedDate
       });
       setOpenCreatePatientModal(false);
       toast.success("Paciente cadastrado com sucesso");
@@ -105,6 +107,7 @@ export const useCreatePatientForm = () => {
     watch,
     errors,
     onSubmit,
-    enterprises
+    enterprises,
+    control
   };
 };

@@ -1,6 +1,6 @@
 import { Enterprise } from "./Enterprise";
 
-export interface Patient {
+export interface Scheduling {
   id: string;
   id_enterprise: number
   enterprise: Enterprise

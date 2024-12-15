@@ -4,7 +4,7 @@ import { Patient } from "../interfaces/models/Patient";
 const PatientService = {
   getPatients: async () => {
     try {
-      const response = await axios.get("http://localhost:3000/paciente");
+      const response = await axios.get("http://10.0.0.129:8080/paciente");
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -14,20 +14,20 @@ const PatientService = {
   },
   createOne: async (patient: Partial<Patient>) => {
     const response = await axios.post<Patient>(
-      `http://localhost:3000/paciente`,
+      `http://10.0.0.129:8080/paciente`,
       patient
     );
     return response.data;
   },
   updateOne: async (patient: Patient) => {
     const response = await axios.put<Patient>(
-      `http://localhost:3000/paciente/${patient.id}`,
+      `http://10.0.0.129:8080/paciente/${patient.id}`,
       patient
     );
     return response.data;
   },
   deleteOne: async (patientId: string) => {
-    await axios.delete(`http://localhost:3000/paciente/${patientId}`);
+    await axios.delete(`http://10.0.0.129:8080/paciente/${patientId}`);
   },
 };
 

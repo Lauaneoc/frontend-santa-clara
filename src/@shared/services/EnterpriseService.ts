@@ -4,7 +4,7 @@ import { Enterprise } from "../interfaces/models/Enterprise";
 const EnterpriseService = {
   getEnterprises: async () => {
     try {
-      const response = await axios.get("http://localhost:3000/enterprise");
+      const response = await axios.get("http://10.0.0.129:8080/enterprise");
       console.log(response.data);
       return response.data;
     } catch (error) {

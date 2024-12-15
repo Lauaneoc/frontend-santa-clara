@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, ReactNode, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { DoctorState, initialState, reducer } from './reduces';
+import { DoctorState, initialState, reducer } from './reduce';
 import { queryKeys } from '../../config/querKeys';
 import DoctorService from '../../services/DoctorService';
 import { Doctor } from '../../interfaces/models/Doctor';
