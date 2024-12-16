@@ -1,19 +1,76 @@
 import { Enterprise } from "./Enterprise";
+import { Patient } from "./Patient";
+
+export interface SchedulingCreate {
+  dataAgendamento: string; 
+  tipoExame: TypeExam;
+  id_patient: number;   
+  id_enterprise: number;
+  exams: string[];
+}
 
 export interface Scheduling {
-  id: string;
-  id_enterprise: number
-  enterprise: Enterprise
-  cpf: string;
-  name: string;
-  dateBirthday: string;
-  email: string
-  phoneNumber: string;
-  cep: string;
-  street: string;
-  number: string;
-  complement: string;
-  neighborhood: string;
-  city: string;
-  state: string;
+  dataAgendamento: string;
+  dataAvaliacao: string | null;
+  dataRealizacaoExame: string | null;
+  dataSolicitacao: string;
+  enterprise: Enterprise;
+  id: number;
+  observacoes: string | null;
+  parecer: Opinion | null;
+  patient: Patient;
+  performedExams: PerformedExam[];
+  status: SchedulingStatus;
+  tipoExame: TypeExam;
+}
+
+export interface SchedulingUpdate {
+  id?: number;
+  dataAgendamento?: Date;
+  dataAvaliacao?: Date;
+  observacoes?: string;
+  status?: SchedulingStatus;
+  parecer?: Opinion;
+  tipoExame?: TypeExam;
+  id_patient?: number;
+  id_enterprise?: number;
+  id_doctor?: number;
+  exams?: number[];
+  updatePerfomedExamDTO?: UpdatePerfomedExam[];
+}
+export interface UpdatePerfomedExam {
+    id_exam: number;
+    laboratoryResultUrl: string;
+}
+
+export interface PerformedExam {
+  specialty: string;
+  category: string;
+  laboratoryResultUrl: string | null;
+}
+
+export interface UpdatePerfomedExamDTO {
+  id_exam: number;
+  laboratoryResultUrl: string;
+}
+
+
+export enum Opinion {
+  APTO = 'APTO',
+  INAPTO = 'INAPTO',
+}
+
+export enum SchedulingStatus {
+  AGENDADO = 'AGENDADO',
+  EXAMES_REALIZADOS = 'EXAMES_REALIZADOS',
+  AGUARDANDO_RESULTADOS = 'AGUARDANDO_RESULTADOS',
+  AGUARDANDO_PARECER_MÉDICO = 'AGUARDANDO_PARECER_MÉDICO',
+  CANCELADO = 'CANCELADO',
+  FINALIZADO = 'FINALIZADO',
+}
+
+export enum TypeExam {
+  ADMISSIONAL = 'ADMISSIONAL',
+  PERIÓDICO = 'PERIÓDICO',
+  DEMISSIONAL = 'DEMISSIONAL',
 }

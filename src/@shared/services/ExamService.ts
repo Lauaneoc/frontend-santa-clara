@@ -4,7 +4,7 @@ import { Exam } from '../interfaces/models/Exams';
 const ExamService = {
     getExams: async (p0: any) => {
         try {
-            const response = await axios.get('http://10.0.0.129:8080/exame');
+            const response = await axios.get('http://localhost:3000/exame');
             console.log(response.data);
             return response.data;
         } catch (error) {

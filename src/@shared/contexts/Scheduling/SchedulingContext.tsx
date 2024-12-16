@@ -3,13 +3,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { SchedulingState, initialState, reducer } from './reduce';
 import { queryKeys } from '../../config/querKeys';
-import PatientService from '../../services/PatientService';
-import { Patient } from '../../interfaces/models/Patient';
-import { PatientContext } from '../Patients/PatientContext';
 import SchedulingService from '../../services/SchedulingService';
+import { Scheduling, SchedulingCreate, SchedulingUpdate } from '../../interfaces/models/Scheduling';
 
 interface SchedulingContextType {
-    fetchScheduling: any;
+    fetchSchedulings: any;
     createScheduling: any;
     updateScheduling: any;
     deleteScheduling: (id: string) => void;
@@ -27,7 +25,7 @@ interface SchedulingsContextProviderProps {
     children: ReactNode;
 }
 
-export const PatientsContextProvider: React.FC<SchedulingsContextProviderProps> = ({ children }) => {
+export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProps> = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState); 
     const [openCreateSchedulingModal, setOpenCreateSchedulingModal] = useState(false);
     const [openUpdateSchedulingModal, setOpenUpdateSchedulingModal] = useState(false);
@@ -40,36 +38,36 @@ export const PatientsContextProvider: React.FC<SchedulingsContextProviderProps> 
         enabled: true,
     });
 
-    const createPatient = useMutation({
-        mutationFn: (patientData: Patient) => SchedulingService.createOne(patientData),
+    const createScheduling = useMutation({
+        mutationFn: (schedulingData: SchedulingCreate) => SchedulingService.createOne(schedulingData),
         onSuccess: () => {
-            toast.success('Paciente cadastrado com sucesso!');
-            queryClient.invalidateQueries({ queryKey: [queryKeys.PATIENT.FIND_MANY] }); 
+            toast.success('Agendamento cadastrado com sucesso!');
+            queryClient.invalidateQueries({ queryKey: [queryKeys.SCHEDULING.FIND_MANY] }); 
         },
         onError: () => {
-            toast.error('Erro ao cadastrar o paciente!');
+            toast.error('Erro ao cadastrar o agendamento!');
         },
     });
 
-    const updatePatient = useMutation({
-        mutationFn: (patientData: Patient) => PatientService.updateOne(patientData),
+    const updateScheduling = useMutation({
+        mutationFn: (schedulingData: SchedulingUpdate) => SchedulingService.updateOne(schedulingData),
         onSuccess: () => {
-            toast.success('Paciente atualizado com sucesso!');
-            queryClient.invalidateQueries({ queryKey: [queryKeys.PATIENT.FIND_MANY] }); 
+            toast.success('Agendamento atualizado com sucesso!');
+            queryClient.invalidateQueries({ queryKey: [queryKeys.SCHEDULING.FIND_MANY] }); 
         },
         onError: () => {
-            toast.error('Erro ao atualizar paciente!');
+            toast.error('Erro ao atualizar agendamento!');
         },
     });
 
-    const deletePatient = useMutation({
-        mutationFn: (id: string) => PatientService.deleteOne(id),
+    const deleteScheduling = useMutation({
+        mutationFn: (id: string) => SchedulingService.deleteOne(id),
         onSuccess: () => {
-            toast.success('Paciente excluído com sucesso!');
-            queryClient.invalidateQueries({ queryKey: [queryKeys.PATIENT.FIND_MANY] });
+            toast.success('Agendamento excluído com sucesso!');
+            queryClient.invalidateQueries({ queryKey: [queryKeys.SCHEDULING.FIND_MANY] });
         },
         onError: () => {
-            toast.error('Erro ao excluir o paciente!');
+            toast.error('Erro ao excluir o agendamento!');
         },
     });
 
@@ -78,21 +76,21 @@ export const PatientsContextProvider: React.FC<SchedulingsContextProviderProps> 
     };
 
     const contextValues = {
-        fetchPatients,
-        createPatient,
-        deletePatient: deletePatient.mutate,
+        fetchSchedulings,
+        createScheduling,
+        deleteScheduling: deleteScheduling.mutate,
         state,
-        updatePatient,
+        updateScheduling,
         setQuery,
-        openCreatePatientModal,
-        openUpdatePatientModal,
-        setOpenCreatePatientModal,
-        setOpenUpdatePatientModal
+        openCreateSchedulingModal,
+        openUpdateSchedulingModal,
+        setOpenCreateSchedulingModal,
+        setOpenUpdateSchedulingModal,
     };
 
     return (
-        <PatientContext.Provider value={contextValues}>
+        <SchedulingContext.Provider value={contextValues}>
             {children}
-        </PatientContext.Provider>
+        </SchedulingContext.Provider>
     );
 };

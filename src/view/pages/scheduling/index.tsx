@@ -10,43 +10,46 @@ import { Input } from "../../components/Input";
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import { EnterprisesContextProvider } from "../../../@shared/contexts/Enterprise/EnterpriseContext";
+import { SchedulingContext, SchedulingsContextProvider } from "../../../@shared/contexts/Scheduling/SchedulingContext";
+import { CreateSchedulingForm } from "../../forms/scheduling/CreateSchedulingForm";
+import { ExamsContextProvider } from "../../../@shared/contexts/Exams/ExamContext";
 
 function Page() {
-    const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
+    const [selectedScheduling, setSelectedScheduling] = useState<string | null>(null);
     const [openDelete, setOpenDelete] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [openViewInfo, setOpenViewInfo] = useState(false);
 
-    const context = useContext(PatientContext);
+    const context = useContext(SchedulingContext);
 
     if (!context) {
         return <div>Loading...</div>;
     }
 
     const { 
-        fetchPatients, 
-        deletePatient, 
-        setOpenCreatePatientModal, 
-        setOpenUpdatePatientModal, 
-        openCreatePatientModal, 
-        openUpdatePatientModal 
+        fetchSchedulings, 
+        deleteScheduling, 
+        setOpenCreateSchedulingModal, 
+        setOpenUpdateSchedulingModal, 
+        openCreateSchedulingModal, 
+        openUpdateSchedulingModal 
     } = context;
 
-    const patientsData = fetchPatients.data || [];
+    const schedulingsData = fetchSchedulings.data || [];
 
-    const filteredPatients = searchTerm.trim() === ''
-        ? patientsData
-        : patientsData.filter((patient: { cpf: string; }) =>
-            patient.cpf.includes(searchTerm.trim())
+    const filteredSchedulings = searchTerm.trim() === ''
+        ? schedulingsData
+        : schedulingsData.filter((scheduling: { cpf: string; }) =>
+            scheduling.cpf.includes(searchTerm.trim())
         );
 
     const renderOptions = (id: string) => (
         <TableOptions 
             options={[
                 { label: 'Atualizar', onClick: () => { 
-                    setSelectedPatient(id);
-                    setOpenUpdatePatientModal(true); 
+                    setSelectedScheduling(id);
+                    setOpenUpdateSchedulingModal(true); 
                 }},
                 { label: 'Visualizar', onClick: () => handleViewInfo(id) },
                 { label: 'Excluir', onClick: () => handleDeleteById(id) }
@@ -55,7 +58,7 @@ function Page() {
     );
 
     const handleViewInfo = (id: string) => {
-        setSelectedPatient(id);
+        setSelectedScheduling(id);
         setOpenViewInfo(true);
     };
 
@@ -64,14 +67,14 @@ function Page() {
         setOpenDelete(true);
     };
 
-    const selectedPatientData = selectedPatient ? patientsData.find((patient: { id: string; }) => patient.id === selectedPatient) : null;
+    const selectedPatientData = selectedScheduling ? schedulingsData.find((scheduling: { id: string; }) => scheduling.id === selectedScheduling) : null;
 
     return (
         <div className="rounded-md bg-white">
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between pt-6 px-6 lg:px-8 ">
                 <div>
-                    <h2 className="text-gray-900 text-lg font-semibold">Pacientes</h2>
-                    <p className="text-gray-500 text-xs">Gerencie os pacientes cadastrados</p>
+                    <h2 className="text-gray-900 text-lg font-semibold">Agendamentos</h2>
+                    <p className="text-gray-500 text-xs">Gerencie os agendamentos cadastrados</p>
                     <div className="flex gap-2 items-end">
                         <Input 
                             placeholder="Pesquise pelo CPF" 
@@ -81,17 +84,17 @@ function Page() {
                         />
                     </div>
                 </div>
-                <Button onClick={() => setOpenCreatePatientModal(true)}>Cadastrar Paciente</Button>
+                <Button onClick={() => setOpenCreateSchedulingModal(true)}>Cadastrar Agendamento</Button>
             </div>
             <div className="h-full">
                 <Table 
                     columns={[
-                        { header: 'Código do Paciente', key: 'id' },
-                        { header: 'CPF', key: 'cpf' },
-                        { header: 'Nome', key: 'name' },
+                        { header: 'Código do Paciente', key: '' },
+                        { header: 'CPF', key: '' },
+                        { header: 'Nome', key: '' },
                         { 
                             header: 'Data de aniversário', 
-                            key: 'dateBirthday',
+                            key: '',
                             render: (rowData) => format(new Date(rowData.dateBirthday), 'dd/MM/yyyy')
                         },
                         { header: 'Email', key: 'email' },
@@ -102,22 +105,22 @@ function Page() {
                             render: (rowData) => renderOptions(rowData.id)
                         }
                     ]}
-                    data={filteredPatients}
+                    data={filteredSchedulings}
                 />
             </div>
 
-            <Modal open={openCreatePatientModal} onClose={() => setOpenCreatePatientModal(false)}>
-                <CreatePatientForm />
+            <Modal open={openCreateSchedulingModal} onClose={() => setOpenCreateSchedulingModal(false)}>
+                <CreateSchedulingForm />
             </Modal>
 
-            <Modal open={openUpdatePatientModal} onClose={() => setOpenUpdatePatientModal(false)}>
+            <Modal open={openUpdateSchedulingModal} onClose={() => setOpenUpdateSchedulingModal(false)}>
                 {selectedPatientData && <UpdatePatientForm patient={selectedPatientData} />}
             </Modal>
 
             <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
                 <div className="flex flex-col gap-4 mt-5 w-[20vw] justify-center">
-                    <p className="font-semibold text-lg w-full text-center">Tem certeza que deseja excluir esse paciente?</p>
-                    <Button onClick={() => { deletePatient(idToDelete); setOpenDelete(false); toast.success('Paciente excluído com sucesso!')}}>
+                    <p className="font-semibold text-lg w-full text-center">Tem certeza que deseja excluir esse agendamento?</p>
+                    <Button onClick={() => { deleteScheduling(idToDelete); setOpenDelete(false); toast.success('Agendamento excluído com sucesso!')}}>
                         Confirmar deleção
                     </Button>
                 </div>
@@ -150,10 +153,14 @@ function Page() {
 
 export function SchedulingPage() {
     return (
-        <EnterprisesContextProvider>
-            <PatientsContextProvider>
-                <Page />
-            </PatientsContextProvider>
-        </EnterprisesContextProvider>
+        <SchedulingsContextProvider>
+            <ExamsContextProvider>
+                <EnterprisesContextProvider>
+                    <PatientsContextProvider>
+                        <Page />
+                    </PatientsContextProvider>
+                </EnterprisesContextProvider>
+            </ExamsContextProvider>
+        </SchedulingsContextProvider>
     );
 }

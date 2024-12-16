@@ -13,6 +13,6 @@ export const queryKeys = {
     FIND_MANY: "findManyEnterprises" as const,
   },
   SCHEDULING: {
-    FIND_MANY: "findManyScheduling" as const,
+    FIND_MANY: "findManySchedulings" as const,
   },
 };

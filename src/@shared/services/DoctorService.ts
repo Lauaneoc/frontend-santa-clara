@@ -4,7 +4,7 @@ import { Doctor } from "../interfaces/models/Doctor";
 const DoctorService = {
   getDoctors: async () => {
     try {
-      const response = await axios.get("http://10.0.0.129:8080/doctor");
+      const response = await axios.get("http://localhost:3000/doctor");
       console.log(response.data);
       return response.data;
     } catch (error) {
@@ -14,7 +14,7 @@ const DoctorService = {
   },
   createOne: async (doctor: Partial<Doctor>) => {
     const response = await axios.post<Doctor>(
-      `http://10.0.0.129:8080/doctor`,
+      `http://localhost:3000/doctor`,
       doctor
     );
     return response.data;
