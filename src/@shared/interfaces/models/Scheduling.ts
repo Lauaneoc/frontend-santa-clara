@@ -1,3 +1,4 @@
+import { Doctor } from "./Doctor";
 import { Enterprise } from "./Enterprise";
 import { Patient } from "./Patient";
 
@@ -22,6 +23,7 @@ export interface Scheduling {
   performedExams: PerformedExam[];
   status: SchedulingStatus;
   tipoExame: TypeExam;
+  doctor: Doctor
 }
 
 export interface SchedulingUpdate {
@@ -71,6 +73,6 @@ export enum SchedulingStatus {
 
 export enum TypeExam {
   ADMISSIONAL = 'ADMISSIONAL',
-  PERIÓDICO = 'PERIÓDICO',
+  PERIÓDICO = 'PERIÓDICO',
   DEMISSIONAL = 'DEMISSIONAL',
 }

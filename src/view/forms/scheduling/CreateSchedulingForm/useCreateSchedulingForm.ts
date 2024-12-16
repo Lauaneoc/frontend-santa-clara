@@ -10,10 +10,12 @@ import { toast } from "react-toastify";
 import { EnterpriseContext } from "../../../../@shared/contexts/Enterprise/EnterpriseContext";
 import { SchedulingContext } from "../../../../@shared/contexts/Scheduling/SchedulingContext";
 import { ExamContext } from "../../../../@shared/contexts/Exams/ExamContext";
+import { DoctorContext } from "../../../../@shared/contexts/Doctor/DoctorContext";
 
 const schema = z.object({
     id_enterprise: z.number().int(),
     id_patient: z.number().int(),
+    id_doctor: z.number().int(),
     exams: z.array(z.number()),
     dataAgendamento: z.string().refine(
       (value) => !isNaN(Date.parse(value)),
@@ -39,6 +41,9 @@ export const useCreateSchedulingForm = () => {
   const contextExams = useContext(ExamContext);
   const exams =  contextExams?.fetchExams;
 
+  const contextDoctors = useContext(DoctorContext);
+  const doctors =  contextDoctors?.fetchDoctors;
+
   if (!context) {
     throw new Error("SchedulingContext must be used within an SchedulingProvider");
   }
@@ -59,10 +64,7 @@ export const useCreateSchedulingForm = () => {
   const onSubmit = async (data: any) => {
     console.log(data);
     try {
-      await createScheduling.mutateAsync({
-        ...data,
-        typeExame: "ADMISSION"
-      });
+      await createScheduling.mutateAsync(data);
       setOpenCreateSchedulingModal(false);
       toast.success("Agendamento cadastrado com sucesso");
     } catch (e) {
@@ -96,6 +98,7 @@ export const useCreateSchedulingForm = () => {
     enterprises,
     patients,
     exams,
+    doctors,
     control,
     handleDateChange
   };

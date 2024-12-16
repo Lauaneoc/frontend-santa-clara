@@ -3,19 +3,24 @@ import { Enterprise } from '../../../../@shared/interfaces/models/Enterprise';
 import { Button } from '../../../components/Button';
 import ComboBox from '../../../components/Combobox';
 import { Input } from '../../../components/Input';
-import { useCreateSchedulingForm } from './useCreateSchedulingForm';
+import { useUpdateSchedulingForm } from './useUpdateSchedulingForm';
 import { Patient } from '../../../../@shared/interfaces/models/Patient';
-import { Exam } from '../../../../@shared/interfaces/models/Exams';
 import MultiSelectComboBox from '../../../components/MultiSelectCombobox';
 import { Doctor } from '../../../../@shared/interfaces/models/Doctor';
+import { Exam } from '../../../../@shared/interfaces/models/Exams';
+import { Scheduling } from '../../../../@shared/interfaces/models/Scheduling';
 
-export const CreateSchedulingForm = () => {
-  const {handleSubmit, onSubmit, enterprises, control, patients, exams, handleDateChange, doctors} = useCreateSchedulingForm();
+type Props = {
+    scheduling: Scheduling;
+}
+
+export const UpdateSchedulingForm = ({ scheduling }:Props) => {
+  const {handleSubmit, onSubmit, enterprises, control, patients, exams, handleDateChange, doctors} = useUpdateSchedulingForm(scheduling);
 
   return (
     <div className="py-6">
-      <h2 className="text-lg font-semibold mb-4 text-slate-700 font-inter">Cadastrar Agendamento</h2>
-      <form onSubmit={(handleSubmit(onSubmit))}>
+      <h2 className="text-lg font-semibold mb-4 text-slate-700 font-inter">Atualizar Agendamento</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
             name="id_doctor"
             control={control}
@@ -72,15 +77,16 @@ export const CreateSchedulingForm = () => {
                 />
             )}
         />
-
+        
         <Controller
             name="dataAgendamento"
             control={control}
+            defaultValue={scheduling?.dataAgendamento ? scheduling.dataAgendamento.slice(0, 19) : ""}
             render={({ field }) => (
                 <Input
                 type="datetime-local"
-                label='Data de Agendamento'
-                value={field.value ? field.value.slice(0, 19) : ""}
+                label="Data de Agendamento"
+                value={field.value}
                 onChange={(e) => {
                     const selectedDate = new Date(e.target.value);
                     field.onChange(handleDateChange(selectedDate));

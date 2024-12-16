@@ -13,6 +13,9 @@ import { EnterprisesContextProvider } from "../../../@shared/contexts/Enterprise
 import { SchedulingContext, SchedulingsContextProvider } from "../../../@shared/contexts/Scheduling/SchedulingContext";
 import { CreateSchedulingForm } from "../../forms/scheduling/CreateSchedulingForm";
 import { ExamsContextProvider } from "../../../@shared/contexts/Exams/ExamContext";
+import { Scheduling } from "../../../@shared/interfaces/models/Scheduling";
+import { DoctorsContextProvider } from "../../../@shared/contexts/Doctor/DoctorContext";
+import { UpdateSchedulingForm } from "../../forms/scheduling/UpdateSchedulingForm";
 
 function Page() {
     const [selectedScheduling, setSelectedScheduling] = useState<string | null>(null);
@@ -67,7 +70,7 @@ function Page() {
         setOpenDelete(true);
     };
 
-    const selectedPatientData = selectedScheduling ? schedulingsData.find((scheduling: { id: string; }) => scheduling.id === selectedScheduling) : null;
+    const selectedSchedulingData = selectedScheduling ? schedulingsData.find((scheduling: { id: string; }) => scheduling.id === selectedScheduling) : null;
 
     return (
         <div className="rounded-md bg-white">
@@ -87,21 +90,31 @@ function Page() {
                 <Button onClick={() => setOpenCreateSchedulingModal(true)}>Cadastrar Agendamento</Button>
             </div>
             <div className="h-full">
-                <Table 
+                <Table<Scheduling>
                     columns={[
-                        { header: 'Código do Paciente', key: '' },
-                        { header: 'CPF', key: '' },
-                        { header: 'Nome', key: '' },
+                        { header: 'Data do Agendamento', key: 'dataAgendamento', render: (rowData) => format(new Date(rowData.dataAgendamento), 'dd/MM/yyyy')},
                         { 
-                            header: 'Data de aniversário', 
-                            key: '',
-                            render: (rowData) => format(new Date(rowData.dateBirthday), 'dd/MM/yyyy')
+                            header: 'Empresa', 
+                            key: 'enterprise', 
+                            render: (rowData) => rowData.enterprise.legalName 
                         },
-                        { header: 'Email', key: 'email' },
-                        { header: 'CEP', key: 'cep' },
+                        { 
+                            header: 'Paciente', 
+                            key: 'patient', 
+                            render: (rowData) => rowData.patient.name 
+                        },
+                        { 
+                            header: 'Parecer', 
+                            key: 'parecer',
+                            render: (rowData) => rowData.parecer == null ? '---' : rowData.parecer
+                        },
+                        { header: 'Status', key: 'status' },
+                        { header: 'Tipo de Exame', key: 'tipoExame' },
                         { 
                             header: '', 
+                            // @ts-ignore
                             key: 'options',
+                            // @ts-ignore
                             render: (rowData) => renderOptions(rowData.id)
                         }
                     ]}
@@ -114,7 +127,7 @@ function Page() {
             </Modal>
 
             <Modal open={openUpdateSchedulingModal} onClose={() => setOpenUpdateSchedulingModal(false)}>
-                {selectedPatientData && <UpdatePatientForm patient={selectedPatientData} />}
+                {selectedSchedulingData && <UpdateSchedulingForm scheduling={selectedSchedulingData} />}
             </Modal>
 
             <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>
@@ -154,13 +167,15 @@ function Page() {
 export function SchedulingPage() {
     return (
         <SchedulingsContextProvider>
-            <ExamsContextProvider>
-                <EnterprisesContextProvider>
-                    <PatientsContextProvider>
-                        <Page />
-                    </PatientsContextProvider>
-                </EnterprisesContextProvider>
-            </ExamsContextProvider>
+            <DoctorsContextProvider>
+                <ExamsContextProvider>
+                    <EnterprisesContextProvider>
+                        <PatientsContextProvider>
+                            <Page />
+                        </PatientsContextProvider>
+                    </EnterprisesContextProvider>
+                </ExamsContextProvider>
+            </DoctorsContextProvider>
         </SchedulingsContextProvider>
     );
 }
