@@ -62,7 +62,6 @@ export const useCreateSchedulingForm = () => {
   });
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     try {
       await createScheduling.mutateAsync(data);
       setOpenCreateSchedulingModal(false);

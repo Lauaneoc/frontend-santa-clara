@@ -41,8 +41,10 @@ export interface SchedulingUpdate {
   updatePerfomedExamDTO?: UpdatePerfomedExam[];
 }
 export interface UpdatePerfomedExam {
-    id_exam: number;
-    laboratoryResultUrl: string;
+  id_exam: number;
+  laboratoryResultUrl: string;
+  dataRealizaçãoExame: Date,
+  dataResultadoExame: Date
 }
 
 export interface PerformedExam {

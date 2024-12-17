@@ -1,4 +1,4 @@
-import { Controller } from 'react-hook-form';
+import { Controller, useFieldArray } from 'react-hook-form';
 import { Enterprise } from '../../../../@shared/interfaces/models/Enterprise';
 import { Button } from '../../../components/Button';
 import ComboBox from '../../../components/Combobox';
@@ -24,8 +24,30 @@ const FieldGroup = ({ title, children, className }: { title: string, children: R
 );
 
 export const UpdateSchedulingForm = ({ scheduling }: Props) => {
-  const { handleSubmit, onSubmit, enterprises, control, patients, exams, handleDateChange, doctors } = useUpdateSchedulingForm(scheduling);
+  const { 
+    handleSubmit, 
+    onSubmit, 
+    enterprises, 
+    control, 
+    patients, 
+    exams, 
+    doctors, 
+    watchedExams,
+    setOpenFormResults,
+    openFormResults,
+    errors,
+    setValue
+    } = useUpdateSchedulingForm(scheduling);
 
+    console.log({errors})
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'updatePerfomedExamDTO'
+    });
+
+
+    console.log(fields)
   return (
     <div className="py-6">
       <div className="flex gap-2 justify-between items-center">
@@ -86,7 +108,7 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
             )}
           />
 
-            <div className="flex gap-2 items-end">
+            <div className="flex gap-2 items-end mb-2">
                 <Controller
                     name="exams"
                     control={control}
@@ -101,11 +123,67 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                     />
                     )}
                 />
-                <Button className=" flex items-center gap-2">
+                <Button onClick={() => setOpenFormResults(true)} className=" flex items-center gap-2">
                     <PlusIcon className="h-5 w-5 text-white" />
                     Adicionar resultados
                 </Button>
             </div>
+            {
+                openFormResults && (
+                    <FieldGroup title="Resultados dos Exames" className="border px-6 py-4 rounded-md">
+                    {watchedExams.map((item, index) => { 
+                        setValue(`updatePerfomedExamDTO.${index}.id_exam`, item)
+                        return (
+                        <div key={item} className="flex flex-col gap-2 border-b py-5 border-slate-400 last:border-b-0">
+                            <Controller
+                                name={`updatePerfomedExamDTO.${index}.laboratoryResultUrl`}
+                                control={control}
+                                rules={{ required: 'URL do Resultado é obrigatória' }}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        type="text"
+                                        label="URL do Resultado"
+                                        placeholder="Cole o link aqui"
+                                    />
+                                )}
+                            />
+    
+                            <div className="grid grid-cols-2 gap-2">
+                                <Controller
+                                    name={`updatePerfomedExamDTO.${index}.dataRealizacaoExame`}
+                                    control={control}
+                                    rules={{ required: 'Data de Realização é obrigatória' }}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            type="datetime-local"
+                                            label="Data de Realização"
+                                        />
+                                    )}
+                                />
+    
+                                <Controller
+                                    name={`updatePerfomedExamDTO.${index}.dataResultadoExame`}
+                                    control={control}
+                                    rules={{ required: 'Data do Resultado é obrigatória' }}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            type="datetime-local"
+                                            label="Data do Resultado"
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    )})}
+                </FieldGroup>
+                )
+            }
+
+
+
 
         </FieldGroup>
 
@@ -116,45 +194,43 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
             render={({ field }) => (
               <Input
                 type="datetime-local"
-                label="Data de Agendamento"
-                value={field.value ? field.value.slice(0, 19) : ""}
+                label="Data e Hora de Agendamento"
+                value={
+                    field.value
+                    ? new Date(field.value).toLocaleString('sv-SE', {
+                        timeZone: 'UTC',
+                        }).slice(0, 16)
+                    : ""
+                }
                 onChange={(e) => {
-                  const selectedDate = new Date(e.target.value);
-                  field.onChange(handleDateChange(selectedDate));
+                    const selectedDate = new Date(e.target.value + "Z");
+                    field.onChange(selectedDate.toISOString());
                 }}
               />
             )}
           />
-          <Controller
-            name="dataRealizacaoExame"
-            control={control}
-            render={({ field }) => (
-              <Input
+
+        <Controller
+        name="dataAvaliacao"
+        control={control}
+        render={({ field }) => (
+            <Input
                 type="datetime-local"
-                label="Data Realização Exame"
-                value={field.value ? field.value.slice(0, 19) : ""}
+                label="Data e Hora Avaliação"
+                value={
+                    field.value
+                    ? new Date(field.value).toLocaleString('sv-SE', {
+                        timeZone: 'UTC',
+                        }).slice(0, 16)
+                    : ""
+                }
                 onChange={(e) => {
-                  const selectedDate = new Date(e.target.value);
-                  field.onChange(handleDateChange(selectedDate));
+                    const selectedDate = new Date(e.target.value + "Z");
+                    field.onChange(selectedDate.toISOString());
                 }}
-              />
-            )}
-          />
-          <Controller
-            name="dataAvaliacao"
-            control={control}
-            render={({ field }) => (
-              <Input
-                type="datetime-local"
-                label="Data Avaliação"
-                value={field.value ? field.value.slice(0, 19) : ""}
-                onChange={(e) => {
-                  const selectedDate = new Date(e.target.value);
-                  field.onChange(handleDateChange(selectedDate));
-                }}
-              />
-            )}
-          />
+            />
+        )}
+        />
         </FieldGroup>
 
         <FieldGroup title="Detalhes do Exame">

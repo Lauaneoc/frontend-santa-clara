@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AxiosError } from "axios";
 import { SchedulingContext } from "../../../../@shared/contexts/Scheduling/SchedulingContext";
 import { toast } from "react-toastify";
@@ -12,36 +12,45 @@ import { ExamContext } from "../../../../@shared/contexts/Exams/ExamContext";
 import { DoctorContext } from "../../../../@shared/contexts/Doctor/DoctorContext";
 
 const schema = z.object({
-  id_enterprise: z.number().int(),
-  id_patient: z.number().int(),
-  id_doctor: z.number().int(),
-  exams: z.array(z.number()),
-  status: z.enum(['AGENDADO', 'EXAMES_REALIZADOS', 'AGUARDANDO_RESULTADOS', 'AGUARDANDO_PARECER_MÉDICO',
-    'CANCELADO', 'FINALIZADO']).optional(),
-  observacoes: z.string().optional(),
-  parecer: z.enum(["APTO", "INAPTO"], {
-    message: "O parecer deve ser APTO ou INAPTO.",
-  }).optional(),
-  dataRealizacaoExame: z.string().refine(
-    (value) => !isNaN(Date.parse(value)),
-    { message: "A data de realização de exame deve estar em um formato válido (ISO 8601)." }
-  ).optional(),
-  dataAvaliacao: z.string().refine(
-    (value) => !isNaN(Date.parse(value)),
-    { message: "A data de avaliação deve estar em um formato válido (ISO 8601)." }
-  ).optional(),
-  dataAgendamento: z.string().refine(
-    (value) => !isNaN(Date.parse(value)),
-    { message: "A data de agendamento deve estar em um formato válido (ISO 8601)." }
-  ).optional(),
-  tipoExame: z.enum(["ADMISSIONAL", "DEMISSIONAL", "PERIÓDICO"], {
-    message: "O tipo de exame deve ser ADMISSIONAL, DEMISSIONAL ou PERIÓDICO.",
-  }),
-});
+    id_enterprise: z.number().int(),
+    id_patient: z.number().int(),
+    id_doctor: z.number().int(),
+    exams: z.array(z.number()),
+    status: z.enum(['AGENDADO', 'EXAMES_REALIZADOS', 'AGUARDANDO_RESULTADOS', 'AGUARDANDO_PARECER_MÉDICO', 'CANCELADO', 'FINALIZADO']).optional(),
+    observacoes: z.string().optional(),
+    parecer: z.enum(["APTO", "INAPTO"]).nullable().optional(),
+    dataAvaliacao: z.string().refine(
+      (value) => !isNaN(Date.parse(value)),
+      { message: "A data de avaliação deve estar em um formato válido (ISO 8601)." }
+    ).optional(),
+    dataAgendamento: z.string().refine(
+      (value) => !isNaN(Date.parse(value)),
+      { message: "A data de agendamento deve estar em um formato válido (ISO 8601)." }
+    ).optional(),
+    tipoExame: z.enum(["ADMISSIONAL", "DEMISSIONAL", "PERIÓDICO"], {
+      message: "O tipo de exame deve ser ADMISSIONAL, DEMISSIONAL ou PERIÓDICO.",
+    }),
+    updatePerfomedExamDTO: z.array(
+        z.object({
+          id_exam: z.number().optional(),
+          laboratoryResultUrl: z.string().optional(),
+          dataRealizacaoExame: z.string().refine(
+            (value) => !isNaN(Date.parse(value)),
+            { message: "Data de realização inválida" }
+          ).optional(),
+          dataResultadoExame: z.string().refine(
+            (value) => !isNaN(Date.parse(value)),
+            { message: "Data do resultado inválida" }
+          ).optional(),
+        })
+      ).optional(),
+  });
+  
 
 type SchedulingFormData = z.infer<typeof schema>;
 
 export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
+    const [openFormResults, setOpenFormResults] = useState(false);
   const context = useContext(SchedulingContext);
   const contextEnterprise = useContext(EnterpriseContext);
   const enterprises = contextEnterprise?.fetchEnterprises;
@@ -67,6 +76,8 @@ export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
     watch,
     control,
     setError,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm<SchedulingFormData>({
     resolver: zodResolver(schema),
@@ -81,12 +92,18 @@ export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
     },
   });
 
+  const watchedExams = watch('exams');
+
+
   const onSubmit = async (data: SchedulingFormData) => {
+    console.log(data);
     try {  
-      await updateScheduling.mutateAsync({
-        ...data,
-        id: scheduling.id,
-      });
+        await updateScheduling.mutateAsync({
+            ...data,
+            id: scheduling.id,
+            
+          });
+        
   
       toast.success("Agendamento atualizado com sucesso!");
       setOpenUpdateSchedulingModal(false);
@@ -102,10 +119,6 @@ export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
     }
   };
   
-  const handleDateChange = (date: Date) => {
-    return date.toISOString();
-  };
-  
 
   return {
     register,
@@ -118,6 +131,9 @@ export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
     patients,
     doctors,
     exams,
-    handleDateChange
+    watchedExams,
+    setOpenFormResults,
+    openFormResults,
+    setValue
   };
 };
