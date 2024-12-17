@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'; // Ícones de abrir e fechar
 
 interface MultiSelectComboBoxProps<T> {
   options: T[];
@@ -64,14 +65,28 @@ const MultiSelectComboBox = <T,>({
           {label}
         </label>
       )}
-      <input
-        type="text"
-        className="border border-gray-300 p-2 py-1.5 rounded-md w-full"
-        placeholder="Selecione ou digite..."
-        value={query || selectedLabels} // Dá prioridade ao texto digitado
-        onChange={(e) => setQuery(e.target.value)}
-        onClick={handleInputClick}
-      />
+      <div className="relative">
+        <input
+          type="text"
+          className="border border-gray-300 p-2 py-1.5 rounded-md w-full text-sm pr-10"
+          placeholder="Selecione ou digite..."
+          value={query || selectedLabels} 
+          onChange={(e) => setQuery(e.target.value)}
+          onClick={handleInputClick}
+        />
+        <button
+          type="button"
+          className="absolute inset-y-0 right-0 flex items-center pr-2"
+          onClick={handleInputClick}
+        >
+          {isOpen ? (
+            <ChevronUpIcon className="h-5 w-5 text-gray-600" />
+          ) : (
+            <ChevronDownIcon className="h-5 w-5 text-gray-600" />
+          )}
+        </button>
+      </div>
+
       {isOpen && (
         <div className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg z-10">
           {filteredOptions.length === 0 ? (

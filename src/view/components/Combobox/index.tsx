@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Combobox } from "@headlessui/react";
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'; // Ícones de abrir e fechar
 
 interface ComboBoxProps<T> {
   options: T[];
-  value: string | number | null; // Aceita ID diretamente
+  value: string | number | null;
   label?: string;
-  onChange: (selectedId: string | number) => void; // Retorna apenas o ID
+  onChange: (selectedId: string | number) => void;
   getExtractorLabel: (option: T) => string;
-  getExtractorValue: (option: T) => string | number; // Extrai o ID
+  getExtractorValue: (option: T) => string | number;
 }
 
 const ComboBox = <T,>({
@@ -19,6 +20,7 @@ const ComboBox = <T,>({
   getExtractorValue,
 }: ComboBoxProps<T>) => {
   const [query, setQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const filteredOptions =
     query === ""
@@ -43,11 +45,15 @@ const ComboBox = <T,>({
       )}
       <Combobox
         value={selectedOption || null}
+        // @ts-ignore
         onChange={(selected: T) => onChange(getExtractorValue(selected))}
+        as="div"
+        // @ts-ignore
+        onOpenChange={setIsOpen}
       >
         <div className="relative">
           <Combobox.Input
-            className="border border-gray-300 p-2 py-1.5 rounded-md w-full"
+            className="border border-gray-300 p-2 py-1.5 rounded-md w-full text-sm"
             placeholder="Selecione ou digite..."
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(option: T) =>
@@ -57,15 +63,17 @@ const ComboBox = <T,>({
           <Combobox.Button
             className="absolute inset-y-0 right-0 flex items-center pr-2"
           >
-            <span className="material-icons">expand_more</span>
+            {isOpen ? (
+              <ChevronUpIcon className="h-5 w-5 text-gray-600" /> 
+            ) : (
+              <ChevronDownIcon className="h-5 w-5 text-gray-600" /> 
+            )}
           </Combobox.Button>
           <Combobox.Options
             className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg z-10"
           >
             {filteredOptions.length === 0 ? (
-              <div className="p-2 text-gray-500">
-                Nenhum resultado encontrado
-              </div>
+              <div className="p-2 text-gray-500">Nenhum resultado encontrado</div>
             ) : (
               filteredOptions.map((option) => (
                 <Combobox.Option

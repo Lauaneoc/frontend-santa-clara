@@ -95,7 +95,7 @@ export const CreateSchedulingForm = () => {
           render={({ field }) => (
             <ComboBox
               label="Tipo de Exame"
-              options={["ADMISSIONAL", "DEMISSIONAL", "PERIÓDICO"]}
+              options={["ADMISSIONAL", "DEMISSIONAL", "PERIÓDICO"]}
               getExtractorLabel={(option: any) => option}
               getExtractorValue={(option: any) => option}
               onChange={(selected) => field.onChange(selected)}

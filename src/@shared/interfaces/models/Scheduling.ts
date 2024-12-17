@@ -46,6 +46,7 @@ export interface UpdatePerfomedExam {
 }
 
 export interface PerformedExam {
+  id_exam: number;
   specialty: string;
   category: string;
   laboratoryResultUrl: string | null;
@@ -73,6 +74,6 @@ export enum SchedulingStatus {
 
 export enum TypeExam {
   ADMISSIONAL = 'ADMISSIONAL',
-  PERIÓDICO = 'PERIÓDICO',
+  PERIÓDICO = 'PERIÓDICO',
   DEMISSIONAL = 'DEMISSIONAL',
 }

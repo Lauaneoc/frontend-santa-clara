@@ -21,8 +21,8 @@ const schema = z.object({
       (value) => !isNaN(Date.parse(value)),
       { message: 'A data de agendamento deve estar em um formato válido (ISO 8601).' }
     ),
-    tipoExame: z.enum(["ADMISSIONAL", "DEMISSIONAL", "PERIÓDICO"], {
-      message: "O tipo de exame deve ser ADMISSIONAL, DEMISSIONAL ou PERIÓDICO.",
+    tipoExame: z.enum(["ADMISSIONAL", "DEMISSIONAL", "PERIÓDICO"], {
+      message: "O tipo de exame deve ser ADMISSIONAL, DEMISSIONAL ou PERIÓDICO.",
     }),
   });
   
@@ -85,7 +85,6 @@ export const useCreateSchedulingForm = () => {
   };
 
   const handleDateChange = (date: Date) => {
-    console.log(    date);
     return date.toISOString();
   };
 
