@@ -133,7 +133,7 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                     {watchedExams.map((item, index) => { 
                         setValue(`updatePerfomedExamDTO.${index}.id_exam`, item)
                         return (
-                        <div key={item} className="flex flex-col gap-2 border-b py-5 border-slate-400 last:border-b-0">
+                        <div key={item} className="flex gap-2 border-b py-5 border-slate-400 last:border-b-0">
                             <Controller
                                 name={`updatePerfomedExamDTO.${index}.laboratoryResultUrl`}
                                 control={control}
@@ -148,7 +148,6 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                                 )}
                             />
     
-                            <div className="grid grid-cols-2 gap-2">
                                 <Controller
                                     name={`updatePerfomedExamDTO.${index}.dataRealizacaoExame`}
                                     control={control}
@@ -161,20 +160,6 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                                         />
                                     )}
                                 />
-    
-                                <Controller
-                                    name={`updatePerfomedExamDTO.${index}.dataResultadoExame`}
-                                    control={control}
-                                    rules={{ required: 'Data do Resultado é obrigatória' }}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            type="datetime-local"
-                                            label="Data do Resultado"
-                                        />
-                                    )}
-                                />
-                            </div>
                         </div>
                     )})}
                 </FieldGroup>

@@ -43,8 +43,8 @@ export interface SchedulingUpdate {
 export interface UpdatePerfomedExam {
   id_exam: number;
   laboratoryResultUrl: string;
-  dataRealizaçãoExame: Date,
-  dataResultadoExame: Date
+  dataRealizacaoExameLaboratorial: Date,
+  dataResultadoExameLaboratorial: Date | null
 }
 
 export interface PerformedExam {

@@ -38,10 +38,6 @@ const schema = z.object({
             (value) => !isNaN(Date.parse(value)),
             { message: "Data de realização inválida" }
           ).optional(),
-          dataResultadoExame: z.string().refine(
-            (value) => !isNaN(Date.parse(value)),
-            { message: "Data do resultado inválida" }
-          ).optional(),
         })
       ).optional(),
   });
