@@ -13,39 +13,40 @@ import { ExamContext } from "../../../../@shared/contexts/Exams/ExamContext";
 import { DoctorContext } from "../../../../@shared/contexts/Doctor/DoctorContext";
 
 const schema = z.object({
-    id_enterprise: z.number().int(),
-    id_patient: z.number().int(),
-    id_doctor: z.number().int(),
-    exams: z.array(z.number()),
-    dataAgendamento: z.string().refine(
-      (value) => !isNaN(Date.parse(value)),
-      { message: 'A data de agendamento deve estar em um formato válido (ISO 8601).' }
-    ),
-    tipoExame: z.enum(["ADMISSIONAL", "DEMISSIONAL", "PERIÓDICO"], {
-      message: "O tipo de exame deve ser ADMISSIONAL, DEMISSIONAL ou PERIÓDICO.",
-    }),
-  });
-  
-  
+  id_enterprise: z.number().int(),
+  id_patient: z.number().int(),
+  id_doctor: z.number().int(),
+  exams: z.array(z.number()),
+  dataAgendamento: z.string().refine((value) => !isNaN(Date.parse(value)), {
+    message:
+      "A data de agendamento deve estar em um formato válido (ISO 8601).",
+  }),
+  tipoExame: z.enum(["ADMISSIONAL", "DEMISSIONAL", "PERIÓDICO"], {
+    message: "O tipo de exame deve ser ADMISSIONAL, DEMISSIONAL ou PERIÓDICO.",
+  }),
+});
+
 type SchedulingFormData = z.infer<typeof schema>;
 
 export const useCreateSchedulingForm = () => {
   const context = useContext(SchedulingContext);
-  
+
   const contextEnterprise = useContext(EnterpriseContext);
-  const enterprises =  contextEnterprise?.fetchEnterprises;
+  const enterprises = contextEnterprise?.fetchEnterprises;
 
   const contextPatient = useContext(PatientContext);
-  const patients =  contextPatient?.fetchPatients;
+  const patients = contextPatient?.fetchPatients;
 
   const contextExams = useContext(ExamContext);
-  const exams =  contextExams?.fetchExams;
+  const exams = contextExams?.fetchExams;
 
   const contextDoctors = useContext(DoctorContext);
-  const doctors =  contextDoctors?.fetchDoctors;
+  const doctors = contextDoctors?.fetchDoctors;
 
   if (!context) {
-    throw new Error("SchedulingContext must be used within an SchedulingProvider");
+    throw new Error(
+      "SchedulingContext must be used within an SchedulingProvider"
+    );
   }
 
   const { createScheduling, setOpenCreateSchedulingModal } = context;
@@ -60,6 +61,9 @@ export const useCreateSchedulingForm = () => {
   } = useForm<SchedulingFormData>({
     resolver: zodResolver(schema),
   });
+
+  const id_enterprise = watch("id_enterprise");
+  console.log("pegueeeeeeeeeeeeeeeeeeeeeeeeeei", id_enterprise);
 
   const onSubmit = async (data: any) => {
     try {
@@ -84,7 +88,10 @@ export const useCreateSchedulingForm = () => {
   };
 
   const handleDateChange = (date: Date) => {
-    return date.toISOString();
+    const offsetDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    );
+    return offsetDate.toISOString();
   };
 
   return {
@@ -98,6 +105,7 @@ export const useCreateSchedulingForm = () => {
     exams,
     doctors,
     control,
-    handleDateChange
+    handleDateChange,
+    id_enterprise,
   };
 };

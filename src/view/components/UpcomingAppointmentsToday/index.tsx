@@ -2,6 +2,7 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon as CheckCircleIconSolid } from "@heroicons/react/24/solid";
 import React, { useContext, useState } from "react";
 import { SchedulingContext } from "../../../@shared/contexts/Scheduling/SchedulingContext";
+import { dateLocal } from "../../../@shared/utils/dateLocal";
 
 interface Appointment {
   id: number;
@@ -23,8 +24,11 @@ interface UpcomingAppointmentsTodayProps {
   appointments: Appointment[];
 }
 
-const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({ appointments }) => {
-  const [appointmentsList, setAppointmentsList] = useState<Appointment[]>(appointments);
+const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({
+  appointments,
+}) => {
+  const [appointmentsList, setAppointmentsList] =
+    useState<Appointment[]>(appointments);
   const context = useContext(SchedulingContext);
 
   if (!context) {
@@ -46,7 +50,9 @@ const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({ a
 
   return (
     <div className="appointments-today p-4 rounded-lg bg-white">
-      <h3 className="text-xl font-semibold mb-4 text-center">Agendamentos de hoje</h3>
+      <h3 className="text-xl font-semibold mb-4 text-center">
+        Agendamentos de hoje
+      </h3>
       <table className="min-w-full table-auto">
         <thead>
           <tr className="border-b">
@@ -70,10 +76,20 @@ const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({ a
                 <td className="px-4 py-2">{appointment.id_patient}</td>
                 <td className="px-4 py-2">{appointment.tipoExame}</td>
                 <td className="px-4 py-2">
-                  {new Date(appointment.dataAgendamento).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {(() => {
+                    const date = new Date(appointment.dataAgendamento);
+                    date.setHours(date.getHours() + 3);
+
+                    console.log("dsdsdsdsds", appointment.dataAgendamento);
+                    console.log(dateLocal(date));
+
+                    const hours = date.getHours().toString().padStart(2, "0");
+                    const minutes = date
+                      .getMinutes()
+                      .toString()
+                      .padStart(2, "0");
+                    return `${hours}:${minutes}`;
+                  })()}
                 </td>
                 <td className="px-4 py-2">{appointment.status}</td>
                 <td className="px-4 py-2 text-center">
