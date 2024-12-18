@@ -17,6 +17,9 @@ interface SchedulingContextType {
     openUpdateSchedulingModal: boolean;
     setOpenCreateSchedulingModal: (open: boolean) => void;
     setOpenUpdateSchedulingModal: (open: boolean) => void;
+    topExams: any
+    topEnterprises: any
+    examsCount: any
 }
 
 export const SchedulingContext = createContext<SchedulingContextType | undefined>(undefined);
@@ -71,22 +74,19 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         },
     });
 
-    const countExamsByStatus = useQuery({
-        queryKey: [queryKeys.SCHEDULING.COUNT_BY_STATUS],
+    const { data: examsCount, isLoading: loadingExams } = useQuery({
+        queryKey: ["countExamsByStatus"],
         queryFn: SchedulingService.countExamsByStatus,
-        staleTime: 1000 * 60 * 5,
       });
-      
-      const getTopEnterprises = useQuery({
-        queryKey: [queryKeys.SCHEDULING.TOP_ENTERPRISES],
+    
+      const { data: topEnterprises, isLoading: loadingEnterprises } = useQuery({
+        queryKey: ["topEnterprisesByScheduling"],
         queryFn: SchedulingService.getTopEnterprises,
-        staleTime: 1000 * 60 * 5,
       });
-      
-      const getTop20Exams = useQuery({
-        queryKey: [queryKeys.SCHEDULING.TOP_20_EXAMS],
+    
+      const { data: topExams, isLoading: loadingTopExams } = useQuery({
+        queryKey: ["top20Exams"],
         queryFn: SchedulingService.getTop20Exams,
-        staleTime: 1000 * 60 * 5,
       });
 
     const setQuery = (type: string, payload: any) => {
@@ -104,9 +104,9 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         openUpdateSchedulingModal,
         setOpenCreateSchedulingModal,
         setOpenUpdateSchedulingModal,
-        countExamsByStatus,
-        getTopEnterprises,
-        getTop20Exams,
+        examsCount,
+        topEnterprises,
+        topExams,
       };
 
     return (

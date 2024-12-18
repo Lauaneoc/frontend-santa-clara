@@ -3,63 +3,70 @@ import { useMemo } from 'react';
 import tailwindColors from 'tailwindcss/colors';
 
 type UsePieChartParams = {
-	legendPosition?: 'bottom' | 'center' | 'chartArea' | 'left' | 'right' | 'top';
+	legendPosition?: 'bottom' | 'left' | 'right' | 'top';
 	titlePosition?: 'bottom' | 'left' | 'right' | 'top';
-	label?: { label: string; mode: 'light' | 'dark' }[];
-	datasets?: ChartDataset<'pie'>[];
+	payload?: Array<{ label: string; count: number }>;
 	color?: keyof typeof tailwindColors;
 	title?: string;
-	legendTitle?: string
-	payload: Array<{label: string, count: number}>
+	legendTitle?: string;
 };
 
-
 export function usePieChart({
-	legendPosition,
+	legendPosition = 'bottom',
 	titlePosition,
-	payload,
+	payload = [],
 	color = 'indigo',
 	title,
-	legendTitle = ''
+	legendTitle = '',
 }: UsePieChartParams) {
 	const options: ChartOptions<'pie'> = useMemo(
 		() => ({
-			indexAxis: 'y' as const,
-			hover: {
-				axis: 'y' as const,
-			},
 			responsive: true,
 			maintainAspectRatio: false,
 			plugins: {
 				legend: {
-					display: legendTitle ? true : false,
-					text: legendTitle,
-					position: legendPosition ?? 'bottom',
+					display: !!legendTitle,
+					labels: {
+						color: tailwindColors.gray[700], // Exemplo de cor padrão
+					},
+					position: legendPosition,
 				},
 				title: {
-					display: title ? true : false,
+					display: !!title,
 					text: title,
 					position: titlePosition,
+					font: {
+						size: 16,
+					},
 				},
 			},
 		}),
-		[legendTitle, legendPosition, titlePosition, title]
+		[legendTitle, legendPosition, title, titlePosition]
 	);
 
-	const data: ChartData<'pie'> = useMemo(
-		() => ({
-			labels: payload.map((data) => data.label),
-			datasets: [{
-				data:  payload.map((data) => data.count),
-				backgroundColor: payload.map((_data, index) => {
-					const colorWeight = 900 - index * 100 as keyof typeof tailwindColors[typeof color];
-					return tailwindColors[color][colorWeight];
-				}),
-				hoverOffset: 4
-			}],
-		}),
-		[color, payload]
-	);
+	const data: ChartData<'pie'> = useMemo(() => {
+		const maxWeight = 900; // Peso máximo da cor
+		const minWeight = 100; // Peso mínimo da cor
+		const weightStep = Math.floor((maxWeight - minWeight) / Math.max(payload.length, 1)); // Passo por índice
+
+		return {
+			labels: payload.map((item) => item.label),
+			datasets: [
+				{
+					data: payload.map((item) => item.count),
+					backgroundColor: payload.map((_item, index) => {
+						const weight = Math.max(
+							maxWeight - index * weightStep,
+							minWeight
+						) as keyof typeof tailwindColors[typeof color];
+
+						return tailwindColors[color][weight] || tailwindColors[color][500]; // Fallback para peso 500
+					}),
+					hoverOffset: 4,
+				},
+			],
+		};
+	}, [color, payload]);
 
 	return { options, data };
 }

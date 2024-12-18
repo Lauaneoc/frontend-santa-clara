@@ -23,24 +23,23 @@ type ComponentsCommonProps = {
 
 export function PieChartCardLabels({ data, color }: PieChartCardLabelsProps) {
 	return (
-		<>
-			{data.map((data, index) => {
-				const colorWeight = (900 -
-					index * 100) as keyof (typeof tailwindColors)[typeof color];
+		<div className="flex flex-wrap gap-2">
+			{data.map((item, index) => {
+				const colorWeight = (900 - index * 100) as keyof (typeof tailwindColors)[typeof color];
 
 				return (
 					<div
 						style={{ backgroundColor: tailwindColors[color][colorWeight] }}
-						className="w-20 h-6 text-center "
-						key={data.label + data.count}
+						className="w-24 h-6 text-center rounded-md"
+						key={`${item.label}-${item.count}`}
 					>
 						<p className="text-xs leading-6 font-medium text-white">
-							{data.label} - {data.count}
+							{item.label} - {item.count}
 						</p>
 					</div>
 				);
 			})}
-		</>
+		</div>
 	);
 }
 
@@ -63,10 +62,10 @@ export function PieChartCard({
 				{addOn && <Card.HeaderAddOn>{addOn}</Card.HeaderAddOn>}
 			</Card.Header>
 
-			<Card.Content className="w-full h-full flex flex-col md:flex-row gap-y-2 ">
+			<Card.Content className="w-full h-full flex flex-col 3xl:flex-row gap-y-2 ">
 				<div className="flex h-[100%] justify-center items-center">{graph}</div>
 
-				<div className="w-full h-full grid grid-cols-2 grid-rows-2 place-items-center md:pt-5">
+				<div className="w-full  h-full grid grid-cols-2 gap-2 grid-rows-1 3x1:grid-rows-2  place-items-center md:pt-5">
 					{labels}
 				</div>
 			</Card.Content>
