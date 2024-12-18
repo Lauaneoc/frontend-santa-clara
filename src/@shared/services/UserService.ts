@@ -4,8 +4,7 @@ import { User } from "../interfaces/models/User";
 const UserService = {
   getUsers: async () => {
     try {
-      const response = await axios.get("http://localhost:3000/users");
-      console.log(response.data);
+      const response = await axios.get("http://localhost:3000/auth");
       return response.data;
     } catch (error) {
       console.error("Error fetching users:", error);

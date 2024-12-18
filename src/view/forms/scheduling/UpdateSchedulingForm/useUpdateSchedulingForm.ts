@@ -94,7 +94,6 @@ export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
 
   const watchedExams = watch('exams');
 
-
   const onSubmit = async (data: SchedulingFormData) => {
     console.log(data);
     try {  
@@ -103,8 +102,6 @@ export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
             id: scheduling.id,
             
           });
-        
-  
       toast.success("Agendamento atualizado com sucesso!");
       setOpenUpdateSchedulingModal(false);
     } catch (error) {

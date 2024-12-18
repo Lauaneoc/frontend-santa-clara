@@ -5,12 +5,11 @@ import { Modal } from "../../components/Modal";
 import TableOptions from "../../components/Table/TableOptions";
 import { Input } from "../../components/Input";
 import { toast } from 'react-toastify';
-import { format } from 'date-fns';
-import { CreateSchedulingForm } from "../../forms/scheduling/CreateSchedulingForm";
-import { Scheduling } from "../../../@shared/interfaces/models/Scheduling";
 import { UpdateSchedulingForm } from "../../forms/scheduling/UpdateSchedulingForm";
 import { UserContext, UsersContextProvider } from "../../../@shared/contexts/User/UserContext";
 import { CreateUserForm } from "../../forms/user/CreateUserForm";
+import { User } from "../../../@shared/interfaces/models/User";
+import { UpdateUserForm } from "../../forms/user/UpdateUserForm";
 
 function Page() {
     const [selectedScheduling, setSelectedScheduling] = useState<string | null>(null);
@@ -36,10 +35,12 @@ function Page() {
 
     const usersData = fetchUsers.data || [];
 
+    console.log({ usersData }); 
+
     const filteredUsers = searchTerm.trim() === ''
         ? usersData
-        : usersData.filter((user: { cpf: string; }) =>
-            user.cpf.includes(searchTerm.trim())
+        : usersData.filter((user: { nome: string; }) =>
+            user.nome.includes(searchTerm.trim())
         );
 
     const renderOptions = (id: string) => (
@@ -85,26 +86,22 @@ function Page() {
                 <Button onClick={() => setOpenCreateUserModal(true)}>Cadastrar Usuário</Button>
             </div>
             <div className="h-full">
-                {/* <Table<Scheduling>
+                <Table<User>
                     columns={[
-                        { header: 'Data do Agendamento', key: 'dataAgendamento', render: (rowData) => format(new Date(rowData.dataAgendamento), 'dd/MM/yyyy')},
                         { 
-                            header: 'Empresa', 
-                            key: 'enterprise', 
-                            render: (rowData) => rowData.enterprise.legalName 
+                            header: 'Nome', 
+                            key: 'nome', 
+                            render: (rowData) => rowData.nome
                         },
                         { 
-                            header: 'Paciente', 
-                            key: 'patient', 
-                            render: (rowData) => rowData.patient.name 
+                            header: 'Email', 
+                            key: 'email', 
+                            render: (rowData) => rowData.email 
                         },
                         { 
-                            header: 'Parecer', 
-                            key: 'parecer',
-                            render: (rowData) => rowData.parecer == null ? '---' : rowData.parecer
+                            header: 'Tipo de Usuário', 
+                            key: 'tipo',
                         },
-                        { header: 'Status', key: 'status' },
-                        { header: 'Tipo de Exame', key: 'tipoExame' },
                         { 
                             header: '', 
                             // @ts-ignore
@@ -114,7 +111,7 @@ function Page() {
                         }
                     ]}
                     data={filteredUsers}
-                /> */}
+                /> 
             </div>
 
             <Modal open={openCreateUserModal} onClose={() => setOpenCreateUserModal(false)}>
@@ -122,7 +119,7 @@ function Page() {
             </Modal>
 
             <Modal open={openUpdateUserModal} onClose={() => setOpenUpdateUserModal(false)}>
-                {selectedUserData && <UpdateSchedulingForm scheduling={selectedUserData} />}
+                {selectedUserData && <UpdateUserForm user={selectedUserData} />}
             </Modal>
 
             <Modal position={'center'} open={openDelete} onClose={() => setOpenDelete(false)}>

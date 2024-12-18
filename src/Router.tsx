@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-
 import { ExamPage } from "./view/pages/Exam";
 import { DefaultLayout } from "./view/DefaultLayout";
 import { PatientPage } from "./view/pages/patient";
@@ -10,16 +9,19 @@ import { UserPage } from "./view/pages/user";
 import { ProtectedRoute } from "./ProtectedRouter";
 import { LoginPage } from "./view/pages/Login";
 import { DashboardPage } from "./view/pages/dashboard";
+import { AuthProvider } from "./@shared/contexts/Auth/AuthContext";
 
 export function Router() {
   return (
+    <AuthProvider>
     <Routes>
-      <Route path="/login" element={<LoginPage /> } />
+      {/* Rota de login não protegida */}
+      <Route path="/login" element={<LoginPage />} />
 
+      {/* Rota protegida com o DefaultLayout */}
       <Route path="/" element={<DefaultLayout />}>
-      <Route
-          index
-          path=""
+        <Route
+          path="/"
           element={
             <ProtectedRoute>
               <DashboardPage />
@@ -27,7 +29,6 @@ export function Router() {
           }
         />
         <Route
-          index
           path="exam"
           element={
             <ProtectedRoute>
@@ -36,7 +37,6 @@ export function Router() {
           }
         />
         <Route
-          index
           path="patient"
           element={
             <ProtectedRoute>
@@ -45,7 +45,6 @@ export function Router() {
           }
         />
         <Route
-          index
           path="doctor"
           element={
             <ProtectedRoute>
@@ -54,7 +53,6 @@ export function Router() {
           }
         />
         <Route
-          index
           path="enterprise"
           element={
             <ProtectedRoute>
@@ -63,7 +61,6 @@ export function Router() {
           }
         />
         <Route
-          index
           path="scheduling"
           element={
             <ProtectedRoute>
@@ -72,7 +69,6 @@ export function Router() {
           }
         />
         <Route
-          index
           path="user"
           element={
             <ProtectedRoute>
@@ -82,5 +78,6 @@ export function Router() {
         />
       </Route>
     </Routes>
+    </AuthProvider>
   );
 }
