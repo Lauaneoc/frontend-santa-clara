@@ -15,4 +15,7 @@ export const queryKeys = {
   SCHEDULING: {
     FIND_MANY: "findManySchedulings" as const,
   },
+  USER: {
+    FIND_MANY: "findManyUsers" as const,
+  }
 };
