@@ -65,7 +65,7 @@ export function PieChartCard({
 			<Card.Content className="w-full h-full flex flex-col 3xl:flex-row gap-y-2 ">
 				<div className="flex h-[100%] justify-center items-center">{graph}</div>
 
-				<div className="w-full  h-full grid grid-cols-2 gap-2 grid-rows-1 3x1:grid-rows-2  place-items-center md:pt-5">
+				<div className="w-full  h-full grid grid-cols-1 gap-2 grid-rows-1 3x1:grid-rows-2  place-items-center md:pt-5">
 					{labels}
 				</div>
 			</Card.Content>

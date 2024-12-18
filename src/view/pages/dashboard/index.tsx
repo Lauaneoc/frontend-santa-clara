@@ -47,7 +47,7 @@ function Page() {
     return (
       <div className="flex gap-4">
         {/* Cards Container */}
-        <div className="flex flex-col gap-4 w-[50%] ">
+        <div className="flex flex-col gap-4 w-[60%] ">
           {/* Card: Top 20 Exames (Gráfico de Barras) */}
           <div className="rounded-md w-full">
             {topExams && topExams.length > 0 ? (
@@ -61,7 +61,7 @@ function Page() {
                     borderColor="red"
                     legendVisible={true}
                     legendPosition="top"
-                    className="w-full h-64"
+                    className="w-full h-44"
                   />
                 }
                 title={"Especialidades com mais agendamentos"}
@@ -99,8 +99,8 @@ function Page() {
         </div>
   
         {/* Agendamentos de Hoje */}
-        <div className=" w-[50%]">
-          <UpcomingAppointmentsToday appointments={schedulingByDate || []} />
+        <div className="w-[50%] h-[78vh] rounded-lg bg-white shadow-md overflow-y-auto">
+            <UpcomingAppointmentsToday appointments={schedulingByDate || []} />
         </div>
       </div>
     );
