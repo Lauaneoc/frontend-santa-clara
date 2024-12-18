@@ -18,21 +18,15 @@ function Page() {
         }
       );
   
-    // Verifique o contexto antes de chamar o useQuery
     if (!context) {
       return <div>Carregando...</div>;
     }
   
     const { topExams, topEnterprises, examsCount, fetchSchedulingByDate } = context;
   
-    
-    // Agora o hook é chamado sem condições
-
-    
     if (isLoading) return <div>Carregando...</div>;
     if (isError) return <div>Erro ao carregar agendamentos por data.</div>;
     
-    // Continuar com a renderização normal
     const examLabels = topExams?.map((exam: any) => exam.specialty) || [];
     const examCounts = topExams?.map((exam: any) => exam.totalAgendamentos) || [];
   
