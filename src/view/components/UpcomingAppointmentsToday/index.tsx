@@ -1,4 +1,5 @@
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon as CheckCircleIconSolid } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 
 interface Appointment {
@@ -74,7 +75,13 @@ const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({ a
                       title="Marcar como Realizado"
                     />
                   ) : (
-                    <span className="text-green-500">Realizado</span>
+                    <span className="text-green-500">
+                        <CheckCircleIconSolid
+                            className="h-6 w-6 text-green-500 cursor-pointer hover:scale-110"
+                            onClick={() => handleMarkAsDone(appointment.id)}
+                            title="Marcar como Realizado"
+                        />
+                  </span>
                   )}
                 </td>
               </tr>

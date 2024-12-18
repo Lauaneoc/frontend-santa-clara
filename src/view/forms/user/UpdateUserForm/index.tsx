@@ -37,7 +37,7 @@ export const UpdateUserForm = ({user}:Props) => {
           render={({ field }) => (
             <ComboBox
               label="Tipo de usuários"
-              options={["ADMINISTRADOR", "FUNCIONÁRIOS"]}
+              options={["administrador", "funcionario"]}
               getExtractorLabel={(option: any) => option}
               getExtractorValue={(option: any) => option}
               onChange={(selected) => field.onChange(selected)}

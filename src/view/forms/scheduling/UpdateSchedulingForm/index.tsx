@@ -142,7 +142,13 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                                     <Input
                                         {...field}
                                         type="text"
-                                        label={`URL do Resultado de ${exams.data.map((exam: { id: number; specialty: any; }) => exam.id === item ? exam.specialty : '')}`}
+                                        label={`URL do Resultado de ${exams.data
+                                          .map((exam: { id: number; specialty: any }) =>
+                                            exam.id === item ? exam.specialty : ""
+                                          )
+                                          .join("") // Transforma o array em uma string
+                                          .replace(/[^\w\s]/gi, "") // Remove caracteres especiais
+                                          .replace(/\s+/g, "")}`} // Remove espaços extras
                                         placeholder="Cole o link aqui"
                                     />
                                 )}

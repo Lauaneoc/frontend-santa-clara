@@ -52,6 +52,8 @@ export interface PerformedExam {
   specialty: string;
   category: string;
   laboratoryResultUrl: string | null;
+  dataRealizacaoExameLaboratorial: Date |  null
+  dataResultadoExameLaboratorial: Date |  null
 }
 
 export interface UpdatePerfomedExamDTO {

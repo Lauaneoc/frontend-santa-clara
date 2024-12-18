@@ -1,6 +1,6 @@
 import { Table } from "../../components/Table";
 import { Button } from "../../components/Button";
-import { useContext, useState } from "react";
+import { Key, useContext, useState } from "react";
 import { Modal } from "../../components/Modal";
 import TableOptions from "../../components/Table/TableOptions";
 import { UpdatePatientForm } from "../../forms/patient/UpdatePatientForm";
@@ -13,7 +13,7 @@ import { EnterprisesContextProvider } from "../../../@shared/contexts/Enterprise
 import { SchedulingContext, SchedulingsContextProvider } from "../../../@shared/contexts/Scheduling/SchedulingContext";
 import { CreateSchedulingForm } from "../../forms/scheduling/CreateSchedulingForm";
 import { ExamsContextProvider } from "../../../@shared/contexts/Exams/ExamContext";
-import { Scheduling } from "../../../@shared/interfaces/models/Scheduling";
+import { PerformedExam, Scheduling } from "../../../@shared/interfaces/models/Scheduling";
 import { DoctorsContextProvider } from "../../../@shared/contexts/Doctor/DoctorContext";
 import { UpdateSchedulingForm } from "../../forms/scheduling/UpdateSchedulingForm";
 
@@ -139,27 +139,83 @@ function Page() {
                 </div>
             </Modal>
 
-            {/* <Modal position={'center'} open={openViewInfo} onClose={() => setOpenViewInfo(false)}>
-                <div className="flex flex-col gap-4 mt-5 w-[35vw]">
+            <Modal position={'center'} open={openViewInfo} onClose={() => setOpenViewInfo(false)}>
+                <div className="flex flex-col gap-4 mt-5 w-[35vw] max-h-[80vh] overflow-y-auto p-4 border rounded-md">
                     <div className="flex gap-4">
-                        <Input label="CPF" disabled value={selectedPatientData?.cpf} />
-                        <Input label="Nome" disabled value={selectedPatientData?.name} />
+                        <Input label="CPF" disabled value={selectedSchedulingData?.patient?.cpf} />
+                        <Input label="Nome" disabled value={selectedSchedulingData?.patient?.name} />
                     </div>
-                    <Input label="Data de Nascimento" disabled value={selectedPatientData?.dateBirthday} />
-                    <Input label="Email" disabled value={selectedPatientData?.email} />
+                    <Input label="Data de Nascimento" disabled value={selectedSchedulingData?.patient?.dateBirthday} />
+                    <Input label="Email" disabled value={selectedSchedulingData?.patient?.email} />
                     <div className="flex gap-4">
-                        <Input label="CEP" disabled value={selectedPatientData?.cep} />
-                        <Input label="Rua" disabled value={selectedPatientData?.street} />
+                        <Input label="CEP" disabled value={selectedSchedulingData?.patient?.cep} />
+                        <Input label="Rua" disabled value={selectedSchedulingData?.patient?.street} />
                     </div>
                     <div className="flex gap-4">
-                        <Input label="Número" disabled value={selectedPatientData?.number} />
-                        <Input label="Complemento" disabled value={selectedPatientData?.complement} />
+                        <Input label="Número" disabled value={selectedSchedulingData?.patient?.number} />
+                        <Input label="Complemento" disabled value={selectedSchedulingData?.patient?.complement} />
                     </div>
-                    <Input label="Bairro" disabled value={selectedPatientData?.neighborhood} />
-                    <Input label="Cidade" disabled value={selectedPatientData?.city} />
-                    <Input label="Estado" disabled value={selectedPatientData?.state} />
+                    <Input label="Bairro" disabled value={selectedSchedulingData?.patient?.neighborhood} />
+                    <Input label="Cidade" disabled value={selectedSchedulingData?.patient?.city} />
+                    <Input label="Estado" disabled value={selectedSchedulingData?.patient?.state} />
+                    
+                    <h3 className="text-gray-900 font-semibold mt-4">Exames Realizados</h3>
+                    <div>
+                    {selectedSchedulingData?.performedExams?.length ? (
+                        <ul className="space-y-4">
+                            {selectedSchedulingData.performedExams.map((exam: { specialty: any; category: any; dataRealizacaoExameLaboratorial: string | number | Date; dataResultadoExameLaboratorial: string | number | Date; laboratoryResultUrl: string | undefined; }, index: Key | null | undefined) => (
+                                <li key={index} className="p-4 border rounded-md shadow-sm bg-white">
+                                    <div className="flex flex-col">
+                                        <span className="text-gray-700 font-semibold">Especialidade:</span>
+                                        <span className="text-gray-900">{exam.specialty || '---'}</span>
+                                    </div>
+                                    <div className="flex flex-col mt-2">
+                                        <span className="text-gray-700 font-semibold">Categoria:</span>
+                                        <span className="text-gray-900">{exam.category || '---'}</span>
+                                    </div>
+                                    <div className="flex flex-col mt-2">
+                                        <span className="text-gray-700 font-semibold">Data de Realização:</span>
+                                        <span className="text-gray-900">
+                                            {exam.dataRealizacaoExameLaboratorial
+                                                ? format(new Date(exam.dataRealizacaoExameLaboratorial), 'dd/MM/yyyy')
+                                                : '---'}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col mt-2">
+                                        <span className="text-gray-700 font-semibold">Data do Resultado:</span>
+                                        <span className="text-gray-900">
+                                            {exam.dataResultadoExameLaboratorial
+                                                ? format(new Date(exam.dataResultadoExameLaboratorial), 'dd/MM/yyyy')
+                                                : '---'}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col mt-2">
+                                        <span className="text-gray-700 font-semibold">Resultado:</span>
+                                        {exam.laboratoryResultUrl ? (
+                                            <a
+                                                href={exam.laboratoryResultUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-500 underline"
+                                            >
+                                                Ver Resultado
+                                            </a>
+                                        ) : (
+                                            <span className="text-gray-900">---</span>
+                                        )}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-gray-500">Nenhum exame realizado.</p>
+                    )}
                 </div>
-            </Modal> */}
+
+                </div>
+            </Modal>
+
+
         </div>
     );
 }
