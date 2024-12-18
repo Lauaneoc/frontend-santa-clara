@@ -1,6 +1,9 @@
 import { Dialog, DialogPanel } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { management } from '../data';
+import { useNavigate } from 'react-router-dom';
+import UserService from '../../../../@shared/services/UserService';
+import { useAuth } from '../../../../@shared/contexts/Auth/AuthContext';
 
 interface MobileMenuProps {
   open: boolean;
@@ -8,6 +11,15 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose }) => {
+
+  const {logout} = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); 
+    navigate("/login");
+  };
   return (
     <Dialog open={open} onClose={onClose} className="lg:hidden">
       <div className="fixed inset-0 z-10" />
@@ -65,6 +77,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose }) => {
                 <a
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900  hover:bg-gray-50"
+                  onClick={handleLogout}
                 >
                   Sair
                 </a>

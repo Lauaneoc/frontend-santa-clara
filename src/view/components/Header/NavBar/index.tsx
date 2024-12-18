@@ -1,12 +1,21 @@
 import { PopoverGroup } from '@headlessui/react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import PopoverMenu from '../PopoverMenu';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../../@shared/contexts/Auth/AuthContext';
 
 interface NavBarProps {
   setMobileMenuOpen: (open: boolean) => void;
 }
 
 const NavBar: React.FC<NavBarProps> = ({ setMobileMenuOpen }) => {
+  const navigate = useNavigate();
+  const {logout} = useAuth();
+
+  const handleLogout = () => {
+    logout(); 
+    navigate("/login");
+  };
   return (
     <nav aria-label="Global" className="mx-auto flex max-w-full md:max-w-[79vw] items-center justify-between p-6 py-4 lg:px-8">
       <div className="flex lg:flex-1">
@@ -34,7 +43,7 @@ const NavBar: React.FC<NavBarProps> = ({ setMobileMenuOpen }) => {
         <PopoverMenu />
       </PopoverGroup>
       <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-        <a href="#" className="text-md font-semibold leading-6 text-slate-50">
+        <a onClick={handleLogout} href="#" className="text-md font-semibold leading-6 text-slate-50">
           Sair <span aria-hidden="true">&rarr;</span>
         </a>
       </div>

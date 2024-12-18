@@ -37,4 +37,10 @@ export const management = [
     href: "doctor",
     icon: UserIcon,
   },
+  {
+    name: "Usuários",
+    description: "Gerencie as informações dos usuários.",
+    href: "user",
+    icon: UserIcon,
+  },
 ];
