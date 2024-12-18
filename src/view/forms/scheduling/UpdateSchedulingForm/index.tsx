@@ -47,7 +47,6 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
     });
 
 
-    console.log(fields)
   return (
     <div className="py-6">
       <div className="flex gap-2 justify-between items-center">
@@ -143,7 +142,7 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                                     <Input
                                         {...field}
                                         type="text"
-                                        label="URL do Resultado"
+                                        label={`URL do Resultado de ${exams.data.map((exam: { id: number; specialty: any; }) => exam.id === item ? exam.specialty : '')}`}
                                         placeholder="Cole o link aqui"
                                     />
                                 )}

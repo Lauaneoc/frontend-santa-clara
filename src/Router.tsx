@@ -9,6 +9,7 @@ import { SchedulingPage } from "./view/pages/scheduling";
 import { UserPage } from "./view/pages/user";
 import { ProtectedRoute } from "./ProtectedRouter";
 import { LoginPage } from "./view/pages/Login";
+import { DashboardPage } from "./view/pages/dashboard";
 
 export function Router() {
   return (
@@ -16,6 +17,15 @@ export function Router() {
       <Route path="/login" element={<LoginPage /> } />
 
       <Route path="/" element={<DefaultLayout />}>
+      <Route
+          index
+          path=""
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           index
           path="exam"

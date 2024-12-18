@@ -71,6 +71,24 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         },
     });
 
+    const countExamsByStatus = useQuery({
+        queryKey: [queryKeys.SCHEDULING.COUNT_BY_STATUS],
+        queryFn: SchedulingService.countExamsByStatus,
+        staleTime: 1000 * 60 * 5,
+      });
+      
+      const getTopEnterprises = useQuery({
+        queryKey: [queryKeys.SCHEDULING.TOP_ENTERPRISES],
+        queryFn: SchedulingService.getTopEnterprises,
+        staleTime: 1000 * 60 * 5,
+      });
+      
+      const getTop20Exams = useQuery({
+        queryKey: [queryKeys.SCHEDULING.TOP_20_EXAMS],
+        queryFn: SchedulingService.getTop20Exams,
+        staleTime: 1000 * 60 * 5,
+      });
+
     const setQuery = (type: string, payload: any) => {
         dispatch({ type, payload });
     };
@@ -86,7 +104,10 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         openUpdateSchedulingModal,
         setOpenCreateSchedulingModal,
         setOpenUpdateSchedulingModal,
-    };
+        countExamsByStatus,
+        getTopEnterprises,
+        getTop20Exams,
+      };
 
     return (
         <SchedulingContext.Provider value={contextValues}>

@@ -1,10 +1,11 @@
 // src/config/queryKeys.ts
+
 export const queryKeys = {
   EXAM: {
-    FIND_MANY: "findManyExams" as const, // Use `as const` para garantir que o tipo seja literal
+    FIND_MANY: "findManyExams" as const,
   },
   PATIENT: {
-    FIND_MANY: "findManyPatients" as const, // Use `as const` para garantir que o tipo seja literal
+    FIND_MANY: "findManyPatients" as const,
   },
   DOCTOR: {
     FIND_MANY: "findManyDoctors" as const,
@@ -14,8 +15,11 @@ export const queryKeys = {
   },
   SCHEDULING: {
     FIND_MANY: "findManySchedulings" as const,
+    COUNT_BY_STATUS: "countExamsByStatus" as const,
+    TOP_ENTERPRISES: "getTopEnterprisesByScheduling" as const,
+    TOP_20_EXAMS: "getTop20Exams" as const,
   },
   USER: {
     FIND_MANY: "findManyUsers" as const,
-  }
+  },
 };
