@@ -2,6 +2,7 @@ import { queryKeys } from "../../config/querKeys";
 
 export interface SchedulingState {
     [queryKeys.SCHEDULING.FIND_MANY]: Record<string, any>;
+    schedulingsByDate?: Record<string, any>; 
 }
 
 export type SchedulingAction = {
@@ -19,6 +20,11 @@ export const reducer = (state: SchedulingState, action: SchedulingAction): Sched
             return {
                 ...state,
                 [queryKeys.SCHEDULING.FIND_MANY]: action.payload,
+            };
+        case 'SET_SCHEDULINGS_BY_DATE':
+            return {
+                ...state,
+                schedulingsByDate: action.payload, 
             };
         default:
             return state;

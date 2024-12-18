@@ -11,15 +11,16 @@ interface SchedulingContextType {
     createScheduling: any;
     updateScheduling: any;
     deleteScheduling: (id: string) => void;
+    fetchSchedulingByDate: (date: string) => void;
     state: SchedulingState;
     setQuery: (type: string, payload: any) => void;
     openCreateSchedulingModal: boolean;
     openUpdateSchedulingModal: boolean;
     setOpenCreateSchedulingModal: (open: boolean) => void;
     setOpenUpdateSchedulingModal: (open: boolean) => void;
-    topExams: any
-    topEnterprises: any
-    examsCount: any
+    topExams: any;
+    topEnterprises: any;
+    examsCount: any;
 }
 
 export const SchedulingContext = createContext<SchedulingContextType | undefined>(undefined);
@@ -29,7 +30,7 @@ interface SchedulingsContextProviderProps {
 }
 
 export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProps> = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, initialState); 
+    const [state, dispatch] = useReducer(reducer, initialState);
     const [openCreateSchedulingModal, setOpenCreateSchedulingModal] = useState(false);
     const [openUpdateSchedulingModal, setOpenUpdateSchedulingModal] = useState(false);
     const queryClient = useQueryClient();
@@ -45,7 +46,7 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         mutationFn: (schedulingData: SchedulingCreate) => SchedulingService.createOne(schedulingData),
         onSuccess: () => {
             toast.success('Agendamento cadastrado com sucesso!');
-            queryClient.invalidateQueries({ queryKey: [queryKeys.SCHEDULING.FIND_MANY] }); 
+            queryClient.invalidateQueries({ queryKey: [queryKeys.SCHEDULING.FIND_MANY] });
         },
         onError: () => {
             toast.error('Erro ao cadastrar o agendamento!');
@@ -56,7 +57,7 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         mutationFn: (schedulingData: SchedulingUpdate) => SchedulingService.updateOne(schedulingData),
         onSuccess: () => {
             toast.success('Agendamento atualizado com sucesso!');
-            queryClient.invalidateQueries({ queryKey: [queryKeys.SCHEDULING.FIND_MANY] }); 
+            queryClient.invalidateQueries({ queryKey: [queryKeys.SCHEDULING.FIND_MANY] });
         },
         onError: () => {
             toast.error('Erro ao atualizar agendamento!');
@@ -77,17 +78,27 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
     const { data: examsCount, isLoading: loadingExams } = useQuery({
         queryKey: ["countExamsByStatus"],
         queryFn: SchedulingService.countExamsByStatus,
-      });
-    
-      const { data: topEnterprises, isLoading: loadingEnterprises } = useQuery({
+    });
+
+    const { data: topEnterprises, isLoading: loadingEnterprises } = useQuery({
         queryKey: ["topEnterprisesByScheduling"],
         queryFn: SchedulingService.getTopEnterprises,
-      });
-    
-      const { data: topExams, isLoading: loadingTopExams } = useQuery({
+    });
+
+    const { data: topExams, isLoading: loadingTopExams } = useQuery({
         queryKey: ["top20Exams"],
         queryFn: SchedulingService.getTop20Exams,
-      });
+    });
+
+    const fetchSchedulingByDate = async (date: string) => {
+        try {
+            const schedulingData = await SchedulingService.getSchedulingByDate(date);
+            return schedulingData;
+        } catch (error) {
+            toast.error('Erro ao buscar agendamento para a data fornecida');
+            console.error(error);
+        }
+    };
 
     const setQuery = (type: string, payload: any) => {
         dispatch({ type, payload });
@@ -107,7 +118,8 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         examsCount,
         topEnterprises,
         topExams,
-      };
+        fetchSchedulingByDate,
+    };
 
     return (
         <SchedulingContext.Provider value={contextValues}>

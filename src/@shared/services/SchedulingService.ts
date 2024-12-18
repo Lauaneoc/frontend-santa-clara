@@ -27,6 +27,11 @@ const SchedulingService = {
     const response = await axios.get("http://localhost:3000/scheduling/getTop20Exams");
     return response.data;
   },
+
+  getSchedulingByDate: async (date: string) => {
+    const response = await  axios.get(`http://localhost:3000/scheduling/getSchedulingByDate/${date}`); 
+    return response.data;
+  },
   createOne: async (scheduling: Partial<SchedulingCreate>) => {
     const response = await axios.post<SchedulingCreate>(
       `http://localhost:3000/scheduling`,

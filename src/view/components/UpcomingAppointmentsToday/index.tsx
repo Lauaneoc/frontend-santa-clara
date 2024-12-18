@@ -2,10 +2,17 @@ import React, { useState } from "react";
 
 interface Appointment {
   id: number;
-  patientName: string;
-  specialty: string;
-  date: string;
+  id_doctor: number;
+  id_enterprise: number;
+  id_patient: number;
+  tipoExame: string;
+  dataAgendamento: string;
+  dataAvaliacao: string | null;
+  dataRealizacaoExame: string | null;
+  dataSolicitacao: string;
   status: string;
+  observacoes: string | null;
+  parecer: string | null;
 }
 
 interface UpcomingAppointmentsTodayProps {
@@ -13,25 +20,7 @@ interface UpcomingAppointmentsTodayProps {
 }
 
 const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({ appointments }) => {
-  const today = new Date();
-  const [appointmentsList, setAppointmentsList] = useState(appointments);
-
-  // Filtrando os agendamentos de hoje
-  const filteredAppointments = appointmentsList.filter((appointment) => {
-    const appointmentDate = new Date(appointment.date);
-    return (
-      appointmentDate.getDate() === today.getDate() &&
-      appointmentDate.getMonth() === today.getMonth() &&
-      appointmentDate.getFullYear() === today.getFullYear()
-    );
-  });
-
-  // Ordenando os agendamentos pela hora
-  const sortedAppointments = filteredAppointments.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateA.getTime() - dateB.getTime();
-  });
+  const [appointmentsList, setAppointmentsList] = useState<Appointment[]>(appointments);
 
   // Função para marcar o agendamento como realizado
   const handleMarkAsDone = (appointmentId: number) => {
@@ -58,19 +47,19 @@ const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({ a
           </tr>
         </thead>
         <tbody>
-          {sortedAppointments.length === 0 ? (
+          {appointmentsList.length === 0 ? (
             <tr>
               <td colSpan={5} className="px-4 py-2 text-center">
                 Nenhum agendamento para hoje.
               </td>
             </tr>
           ) : (
-            sortedAppointments.map((appointment) => (
+            appointmentsList.map((appointment) => (
               <tr key={appointment.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{appointment.patientName}</td>
-                <td className="px-4 py-2">{appointment.specialty}</td>
+                <td className="px-4 py-2">{appointment.id_patient}</td> {/* Substitua por nome do paciente, se disponível */}
+                <td className="px-4 py-2">{appointment.tipoExame}</td>
                 <td className="px-4 py-2">
-                  {new Date(appointment.date).toLocaleTimeString([], {
+                  {new Date(appointment.dataAgendamento).toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
