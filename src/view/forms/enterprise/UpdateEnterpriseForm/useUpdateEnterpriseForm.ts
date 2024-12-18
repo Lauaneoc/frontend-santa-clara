@@ -10,7 +10,6 @@ import { Enterprise } from "../../../../@shared/interfaces/models/Enterprise";
 
 // Schema de validação
 const schema = z.object({
-  id: z.string().min(1, "ID da empresa é obrigatório"),
   cnpj: z
     .string()
     .min(14, "CNPJ é obrigatório e deve conter 14 caracteres")
@@ -65,8 +64,12 @@ export const useUpdateEnterpriseForm = (enterprise: Enterprise) => {
   });
 
   const onSubmit = async (data: EnterpriseFormData) => {
+    console.log("Formulário enviado com os dados:", data);
     try {
-      await updateEnterprise.mutateAsync({ ...data, id: data.id });
+      await updateEnterprise.mutateAsync({
+        ...data, 
+        id: enterprise.id,
+      });
       setOpenUpdateEnterpriseModal(false);
       toast.success("Empresa atualizada com sucesso!");
     } catch (e) {

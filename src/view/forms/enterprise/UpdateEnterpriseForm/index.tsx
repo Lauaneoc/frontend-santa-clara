@@ -12,7 +12,7 @@ export const UpdateEnterpriseForm = ({enterprise}:UpdateEnterpriseFormProps) => 
   
     return (
       <div className="py-6">
-        <h2 className="text-lg font-semibold mb-4 text-slate-700 font-inter">Cadastrar Empresa</h2>
+        <h2 className="text-lg font-semibold mb-4 text-slate-700 font-inter">Atualizar Empresa</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Identificação */}
           <div className="space-y-4">
