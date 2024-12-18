@@ -1,6 +1,7 @@
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon as CheckCircleIconSolid } from "@heroicons/react/24/solid";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { SchedulingContext } from "../../../@shared/contexts/Scheduling/SchedulingContext";
 
 interface Appointment {
   id: number;
@@ -15,6 +16,7 @@ interface Appointment {
   status: string;
   observacoes: string | null;
   parecer: string | null;
+  compareceu: boolean; // Alterado para boolean
 }
 
 interface UpcomingAppointmentsTodayProps {
@@ -23,16 +25,23 @@ interface UpcomingAppointmentsTodayProps {
 
 const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({ appointments }) => {
   const [appointmentsList, setAppointmentsList] = useState<Appointment[]>(appointments);
+  const context = useContext(SchedulingContext);
 
-  // Função para marcar o agendamento como realizado
+  if (!context) {
+    return <div>Contexto não disponível</div>;
+  }
+
+  const { updateComparecer } = context;
+
   const handleMarkAsDone = (appointmentId: number) => {
     setAppointmentsList((prevAppointments) =>
       prevAppointments.map((appointment) =>
         appointment.id === appointmentId
-          ? { ...appointment, status: "Realizado" }
+          ? { ...appointment, status: "Realizado", compareceu: true } // Atualiza o compareceu para true
           : appointment
       )
     );
+    updateComparecer(appointmentId.toString()); // Atualiza o comparecer através da função
   };
 
   return (
@@ -68,20 +77,17 @@ const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({ a
                 </td>
                 <td className="px-4 py-2">{appointment.status}</td>
                 <td className="px-4 py-2 text-center">
-                  {appointment.status !== "Realizado" ? (
+                  {appointment.compareceu ? (
+                    <CheckCircleIconSolid
+                      className="h-6 w-6 text-green-500 cursor-pointer hover:scale-110"
+                      title="Marcar como Realizado"
+                    />
+                  ) : (
                     <CheckCircleIcon
                       className="h-6 w-6 text-green-500 cursor-pointer hover:scale-110"
                       onClick={() => handleMarkAsDone(appointment.id)}
                       title="Marcar como Realizado"
                     />
-                  ) : (
-                    <span className="text-green-500">
-                        <CheckCircleIconSolid
-                            className="h-6 w-6 text-green-500 cursor-pointer hover:scale-110"
-                            onClick={() => handleMarkAsDone(appointment.id)}
-                            title="Marcar como Realizado"
-                        />
-                  </span>
                   )}
                 </td>
               </tr>

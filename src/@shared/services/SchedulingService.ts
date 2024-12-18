@@ -49,6 +49,9 @@ const SchedulingService = {
   deleteOne: async (schedulingId: string) => {
     await axios.delete(`http://localhost:3000/scheduling/${schedulingId}`);
   },
+  updateComparecer: async (schedulingId: string) => {
+    await axios.patch(`http://localhost:3000/scheduling/atualiza-comparecer/${schedulingId}`);
+  },
 };
 
 export default SchedulingService;

@@ -11,6 +11,7 @@ interface SchedulingContextType {
     createScheduling: any;
     updateScheduling: any;
     deleteScheduling: (id: string) => void;
+    updateComparecer: (id: string) => void;
     fetchSchedulingByDate: (date: string) => void;
     state: SchedulingState;
     setQuery: (type: string, payload: any) => void;
@@ -61,6 +62,17 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         },
         onError: () => {
             toast.error('Erro ao atualizar agendamento!');
+        },
+    });
+
+    const updateComparecer = useMutation({
+        mutationFn: (schedulingId: string) => SchedulingService.updateComparecer(schedulingId),
+        onSuccess: () => {
+            toast.success('Status de comparecimento atualizado!');
+            queryClient.invalidateQueries({ queryKey: [queryKeys.SCHEDULING.FIND_MANY] });
+        },
+        onError: () => {
+            toast.error('Erro ao atualizar status de comparecimento!');
         },
     });
 
@@ -119,6 +131,7 @@ export const SchedulingsContextProvider: React.FC<SchedulingsContextProviderProp
         topEnterprises,
         topExams,
         fetchSchedulingByDate,
+        updateComparecer: updateComparecer.mutate,
     };
 
     return (
