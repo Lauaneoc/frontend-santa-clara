@@ -66,7 +66,7 @@ export const useUpdateEnterpriseForm = (enterprise: Enterprise) => {
 
   const onSubmit = async (data: EnterpriseFormData) => {
     try {
-      await updateEnterprise.mutateAsync(data);
+      await updateEnterprise.mutateAsync({ ...data, id: data.id });
       setOpenUpdateEnterpriseModal(false);
       toast.success("Empresa atualizada com sucesso!");
     } catch (e) {
