@@ -14,10 +14,12 @@ import toast from "react-hot-toast";
 import TableOptions from "../../components/Table/TableOptions";
 
 function Page() {
-  const [selectedEnterprise, setSelectedEnterprise] = useState<string | null>(null);
+  const [selectedEnterprise, setSelectedEnterprise] = useState<string | null>(
+    null
+  );
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [openDelete, setOpenDelete] = useState(false);
-  const [idToDelete, setIdToDelete] = useState<string>("");		
+  const [idToDelete, setIdToDelete] = useState<string>("");
   const [openViewInfo, setOpenViewInfo] = useState(false);
   const context = useContext(EnterpriseContext);
 
@@ -34,7 +36,6 @@ function Page() {
     openUpdateEnterpriseModal,
   } = context;
 
-  
   const handleDeleteById = (id: string) => {
     setIdToDelete(id);
     setOpenDelete(true);
@@ -55,31 +56,33 @@ function Page() {
           enterprise.cnpj.includes(searchTerm.trim())
         );
 
-     const renderOptions = (id: string) => (
-       <TableOptions
-         options={[
-           {
-             label: "Atualizar",
-             onClick: () => {
-               setSelectedEnterprise(id);
-               setOpenUpdateEnterpriseModal(true);
-             },
-           },
-           {
-             label: "Visualizar",
-             onClick: () => handleViewInfo(id),
-           },
-           {
-             label: "Excluir",
-             onClick: () => handleDeleteById(id),
-           },
-         ]}
-       />
-     );
+  const renderOptions = (id: string) => (
+    <TableOptions
+      options={[
+        {
+          label: "Atualizar",
+          onClick: () => {
+            setSelectedEnterprise(id);
+            setOpenUpdateEnterpriseModal(true);
+          },
+        },
+        {
+          label: "Visualizar",
+          onClick: () => handleViewInfo(id),
+        },
+        {
+          label: "Excluir",
+          onClick: () => handleDeleteById(id),
+        },
+      ]}
+    />
+  );
 
-     const selectedEnterpriseData = selectedEnterprise
-       ? enterpriseData.find((enterprise: { id: string }) => enterprise.id === selectedEnterprise)
-       : null;
+  const selectedEnterpriseData = selectedEnterprise
+    ? enterpriseData.find(
+        (enterprise: { id: string }) => enterprise.id === selectedEnterprise
+      )
+    : null;
 
   return (
     <div className=" bg-white rounded-md">
@@ -100,7 +103,7 @@ function Page() {
         </div>
         <Button onClick={() => setOpenCreateEnterpriseModal(true)}>
           Cadastrar Empresa
-        </Button> 
+        </Button>
       </div>
       <div className="h-[55vh]">
         <Table
@@ -118,7 +121,7 @@ function Page() {
           data={filteredEnterprise}
         />
       </div>
-      
+
       <Modal
         open={openCreateEnterpriseModal}
         onClose={() => setOpenCreateEnterpriseModal(false)}
@@ -130,7 +133,9 @@ function Page() {
         open={openUpdateEnterpriseModal}
         onClose={() => setOpenUpdateEnterpriseModal(false)}
       >
-        {selectedEnterprise && <UpdateEnterpriseForm enterprise={selectedEnterpriseData}  />}
+        {selectedEnterprise && (
+          <UpdateEnterpriseForm enterprise={selectedEnterpriseData} />
+        )}
       </Modal>
       <Modal
         position={"center"}
@@ -159,7 +164,46 @@ function Page() {
         onClose={() => setOpenViewInfo(false)}
       >
         <div className="flex flex-col gap-4 mt-5 w-[35vw]">
-          <p>visualização empresa</p>
+          <div className="flex gap-4">
+            <Input label="CPF" disabled value={selectedEnterpriseData?.cnpj} />
+            <Input
+              label="Nome"
+              disabled
+              value={selectedEnterpriseData?.legalName}
+            />
+          </div>
+          <Input label="Email" disabled value={selectedEnterpriseData?.email} />
+          <div className="flex gap-4">
+            <Input label="CEP" disabled value={selectedEnterpriseData?.cep} />
+            <Input
+              label="Rua"
+              disabled
+              value={selectedEnterpriseData?.street}
+            />
+          </div>
+          <div className="flex gap-4">
+            <Input
+              label="Número"
+              disabled
+              value={selectedEnterpriseData?.number}
+            />
+            <Input
+              label="Complemento"
+              disabled
+              value={selectedEnterpriseData?.complement}
+            />
+          </div>
+          <Input
+            label="Bairro"
+            disabled
+            value={selectedEnterpriseData?.neighborhood}
+          />
+          <Input label="Cidade" disabled value={selectedEnterpriseData?.city} />
+          <Input
+            label="Estado"
+            disabled
+            value={selectedEnterpriseData?.state}
+          />
         </div>
       </Modal>
     </div>
