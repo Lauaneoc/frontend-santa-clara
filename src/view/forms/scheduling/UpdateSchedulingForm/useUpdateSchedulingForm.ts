@@ -34,18 +34,20 @@ const schema = z.object({
         z.object({
           id_exam: z.number().optional(),
           laboratoryResultUrl: z.string().optional(),
-          dataRealizacaoExame: z.string().refine(
+          dataRealizacaoExameLaboratorial: z.string().refine(
             (value) => !isNaN(Date.parse(value)),
             { message: "Data de realização inválida" }
           ).optional(),
         })
       ).optional(),
   });
+
   
-
-type SchedulingFormData = z.infer<typeof schema>;
-
-export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
+  
+  type SchedulingFormData = z.infer<typeof schema>;
+  
+  export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
+  console.log(scheduling)
     const [openFormResults, setOpenFormResults] = useState(false);
   const context = useContext(SchedulingContext);
   const contextEnterprise = useContext(EnterpriseContext);
@@ -83,8 +85,15 @@ export const useUpdateSchedulingForm = (scheduling: Scheduling) => {
       id_enterprise: Number(scheduling.enterprise.id),
       tipoExame: scheduling.tipoExame,
       observacoes: scheduling.observacoes ?? '',
+      dataAgendamento: scheduling.dataAgendamento,
+      dataAvaliacao: scheduling.dataAvaliacao ?? '',
       exams: scheduling.performedExams.map((exam) => Number(exam.id_exam)),
       parecer: scheduling.parecer as Opinion,
+      updatePerfomedExamDTO: scheduling.performedExams.map((exam) => ({
+        id_exam: exam.id_exam ? Number(exam.id_exam) : undefined,
+        laboratoryResultUrl: exam.laboratoryResultUrl ?? '',
+        dataRealizacaoExame: exam.dataRealizacaoExameLaboratorial ?? '',
+      })),
     },
   });
 

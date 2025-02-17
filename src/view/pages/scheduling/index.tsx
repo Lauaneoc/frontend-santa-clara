@@ -55,8 +55,8 @@ function Page() {
   const filteredSchedulings =
     searchTerm.trim() === ""
       ? schedulingsData
-      : schedulingsData.filter((scheduling: { cpf: string }) =>
-          scheduling.cpf.includes(searchTerm.trim())
+      : schedulingsData.filter((scheduling: Scheduling) =>
+          scheduling.patient.cpf.includes(searchTerm.trim())
         );
 
   const renderOptions = (id: string) => (
@@ -130,6 +130,11 @@ function Page() {
               header: "Paciente",
               key: "patient",
               render: (rowData) => rowData.patient.name,
+            },
+            {
+              header: "CPF do paciente",
+              key: "patient",
+              render: (rowData) => rowData.patient.cpf,
             },
             {
               header: "Parecer",
@@ -255,6 +260,39 @@ function Page() {
             disabled
             value={selectedSchedulingData?.patient?.state}
           />
+          <div>
+          <Input
+              label="Empresa"
+              disabled
+              value={selectedSchedulingData?.enterprise?.legalName}
+            />
+              <Input
+              label="CNPJ"
+              disabled
+              value={selectedSchedulingData?.enterprise?.cnpj}
+            />
+          </div>
+          <div>
+            <Input
+              label="Médico"
+              disabled
+              value={selectedSchedulingData?.doctor?.name}
+            />
+              <Input
+              label="CRM"
+              disabled
+              value={selectedSchedulingData?.doctor?.CRM}
+            />
+
+          </div>
+          <div>
+            <Input
+              label="Parecer"
+              disabled
+              value={selectedSchedulingData?.parecer}
+            />
+
+          </div>
 
           <h3 className="text-gray-900 font-semibold mt-4">
             Exames Realizados
@@ -343,6 +381,13 @@ function Page() {
             ) : (
               <p className="text-gray-500">Nenhum exame realizado.</p>
             )}
+          </div>
+          <div>
+          <Input
+              label="Data de Parecer"
+              disabled
+              value={selectedSchedulingData?.dataAvaliacao}
+            />
           </div>
         </div>
       </Modal>

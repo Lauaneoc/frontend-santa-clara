@@ -9,6 +9,7 @@ interface ComboBoxProps<T> {
   onChange: (selectedId: string | number) => void;
   getExtractorLabel: (option: T) => string;
   getExtractorValue: (option: T) => string | number;
+  error?: string
 }
 
 const ComboBox = <T,>({
@@ -18,6 +19,7 @@ const ComboBox = <T,>({
   label,
   getExtractorLabel,
   getExtractorValue,
+  error
 }: ComboBoxProps<T>) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -91,6 +93,9 @@ const ComboBox = <T,>({
             )}
           </Combobox.Options>
         </div>
+      {error && (
+        <p className="mt-2 text-sm text-red-600">{error}</p>
+      )}
       </Combobox>
     </div>
   );

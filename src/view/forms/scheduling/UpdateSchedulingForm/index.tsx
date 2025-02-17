@@ -180,7 +180,7 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                     />
 
                     <Controller
-                      name={`updatePerfomedExamDTO.${index}.dataRealizacaoExame`}
+                      name={`updatePerfomedExamDTO.${index}.dataRealizacaoExameLaboratorial`}
                       control={control}
                       rules={{ required: "Data de Realização é obrigatória" }}
                       render={({ field }) => (
@@ -223,10 +223,7 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                 type="datetime-local"
                 label="Data e Hora Avaliação"
                 value={field.value ? field.value.slice(0, 19) : ""}
-                onChange={(e) => {
-                  const selectedDate = new Date(e.target.value + "Z");
-                  field.onChange(selectedDate.toISOString());
-                }}
+                onChange={field.onChange}
               />
             )}
           />
@@ -243,7 +240,7 @@ export const UpdateSchedulingForm = ({ scheduling }: Props) => {
                 getExtractorLabel={(option: SchedulingStatus) => option}
                 getExtractorValue={(option: SchedulingStatus) => option}
                 onChange={(selected) => field.onChange(selected)}
-                value={field.value as SchedulingStatus}
+                value={field.value as SchedulingStatus || null}
               />
             )}
           />

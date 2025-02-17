@@ -20,6 +20,7 @@ export const CreateSchedulingForm = () => {
     handleDateChange,
     id_enterprise,
     doctors,
+    errors
   } = useCreateSchedulingForm();
 
   return (
@@ -39,6 +40,7 @@ export const CreateSchedulingForm = () => {
               getExtractorValue={(option: Doctor) => option.id}
               onChange={(selected) => field.onChange(selected)}
               value={field.value}
+              error={errors.id_doctor?.message}
             />
           )}
         />
@@ -53,6 +55,7 @@ export const CreateSchedulingForm = () => {
               getExtractorValue={(option: Enterprise) => option.id}
               onChange={(selected) => field.onChange(selected)}
               value={field.value}
+              error={errors.id_enterprise?.message}
             />
           )}
         />
@@ -70,6 +73,7 @@ export const CreateSchedulingForm = () => {
               getExtractorValue={(option: Patient) => option.id}
               onChange={(selected) => field.onChange(selected)}
               value={field.value}
+              error={errors.id_patient?.message}
             />
           )}
         />
@@ -86,6 +90,7 @@ export const CreateSchedulingForm = () => {
                 field.onChange(selected);
               }}
               values={field.value || []}
+              error={errors.exams?.message}
             />
           )}
         />
@@ -106,6 +111,7 @@ export const CreateSchedulingForm = () => {
                 );
                 field.onChange(handleDateChange(selectedDate));
               }}
+              error={errors.dataAgendamento?.message}
             />
           )}
         />
@@ -121,6 +127,7 @@ export const CreateSchedulingForm = () => {
               getExtractorValue={(option: any) => option}
               onChange={(selected) => field.onChange(selected)}
               value={field.value}
+              error={errors.tipoExame?.message}
             />
           )}
         />

@@ -61,7 +61,7 @@ function Page() {
                     borderColor="red"
                     legendVisible={true}
                     legendPosition="top"
-                    className="w-full h-44"
+                    className="w-full h-40"
                   />
                 }
                 title={"Especialidades com mais agendamentos"}
@@ -99,7 +99,7 @@ function Page() {
         </div>
   
         {/* Agendamentos de Hoje */}
-        <div className="w-[50%] h-[78vh] rounded-lg bg-white shadow-md overflow-y-auto">
+        <div className="w-[50%] h-[80.2vh] rounded-lg bg-white shadow-md overflow-y-auto">
             <UpcomingAppointmentsToday appointments={schedulingByDate || []} />
         </div>
       </div>

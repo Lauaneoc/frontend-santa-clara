@@ -46,7 +46,7 @@ export const useUpdateDoctorForm = (doctor: Doctor) => {
     try {
       await updateDoctor.mutateAsync({ ...data, id: doctor.id });
       setOpenUpdateDoctorModal(false);
-      toast.success("Exame atualizado com sucesso");
+      toast.success("Médico atualizado com sucesso");
     } catch (e) {
       if (e instanceof AxiosError) {
         const error = e as AxiosError<UsecaseError>;

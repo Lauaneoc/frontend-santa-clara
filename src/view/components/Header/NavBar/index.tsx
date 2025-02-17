@@ -3,6 +3,7 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 import PopoverMenu from '../PopoverMenu';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../@shared/contexts/Auth/AuthContext';
+import logo from "../../../../assets/logo_santa_clara.jpeg"
 
 interface NavBarProps {
   setMobileMenuOpen: (open: boolean) => void;
@@ -23,7 +24,7 @@ const NavBar: React.FC<NavBarProps> = ({ setMobileMenuOpen }) => {
           <span className="sr-only">Clínica Santa Clara</span>
           <img
             alt=""
-            src="https://santaclaracentromedico.com.br/wp-content/uploads/2023/12/LOGO_SANTA_CLARA3.png"
+            src={logo}
             className="w-[250px]"
           />
         </a>

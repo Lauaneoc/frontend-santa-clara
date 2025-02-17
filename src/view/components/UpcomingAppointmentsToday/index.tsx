@@ -41,7 +41,7 @@ const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({
     setAppointmentsList((prevAppointments) =>
       prevAppointments.map((appointment) =>
         appointment.id === appointmentId
-          ? { ...appointment, status: "Realizado", compareceu: true } // Atualiza o compareceu para true
+          ? { ...appointment, compareceu: !appointment.compareceu } // Atualiza o compareceu para true
           : appointment
       )
     );
@@ -59,7 +59,6 @@ const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({
             <th className="px-4 py-2 text-left">Paciente</th>
             <th className="px-4 py-2 text-left">Especialidade</th>
             <th className="px-4 py-2 text-left">Hora</th>
-            <th className="px-4 py-2 text-left">Status</th>
             <th className="px-4 py-2 text-center"></th>
           </tr>
         </thead>
@@ -91,12 +90,12 @@ const UpcomingAppointmentsToday: React.FC<UpcomingAppointmentsTodayProps> = ({
                     return `${hours}:${minutes}`;
                   })()}
                 </td>
-                <td className="px-4 py-2">{appointment.status}</td>
                 <td className="px-4 py-2 text-center">
                   {appointment.compareceu ? (
                     <CheckCircleIconSolid
                       className="h-6 w-6 text-green-500 cursor-pointer hover:scale-110"
                       title="Marcar como Realizado"
+                      onClick={() => handleMarkAsDone(appointment.id)}
                     />
                   ) : (
                     <CheckCircleIcon

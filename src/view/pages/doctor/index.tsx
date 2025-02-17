@@ -102,7 +102,6 @@ function Page() {
       <div className="h-[55vh]">
         <Table
           columns={[
-            { header: "Código de Médico", key: "id" },
             { header: "CRM", key: "crm" },
             { header: "Nome", key: "name" },
             { header: "Email", key: "email" },
@@ -110,6 +109,7 @@ function Page() {
             {
               header: "",
               key: "options",
+              // @ts-ignore
               render: (rowData) => renderOptions(rowData.id),
             },
           ]}

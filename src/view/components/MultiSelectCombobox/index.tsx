@@ -8,6 +8,7 @@ interface MultiSelectComboBoxProps<T> {
   onChange: (selectedIds: Array<string | number>) => void;
   getExtractorLabel: (option: T) => string;
   getExtractorValue: (option: T) => string | number;
+  error?: string
 }
 
 const MultiSelectComboBox = <T,>({
@@ -17,6 +18,7 @@ const MultiSelectComboBox = <T,>({
   onChange,
   getExtractorLabel,
   getExtractorValue,
+  error
 }: MultiSelectComboBoxProps<T>) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -110,6 +112,9 @@ const MultiSelectComboBox = <T,>({
             })
           )}
         </div>
+      )}
+      {error && (
+        <p className="mt-2 text-sm text-red-600">{error}</p>
       )}
     </div>
   );

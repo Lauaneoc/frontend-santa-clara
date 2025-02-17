@@ -86,7 +86,6 @@ function Page() {
             <div className="h-full">
                 <Table 
                     columns={[
-                        { header: 'Código do Paciente', key: 'id' },
                         { header: 'CPF', key: 'cpf' },
                         { header: 'Nome', key: 'name' },
                         { 
@@ -99,6 +98,7 @@ function Page() {
                         { 
                             header: '', 
                             key: 'options',
+                            // @ts-ignore
                             render: (rowData) => renderOptions(rowData.id)
                         }
                     ]}

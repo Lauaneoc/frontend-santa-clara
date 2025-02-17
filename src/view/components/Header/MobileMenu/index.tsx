@@ -4,6 +4,7 @@ import { management } from '../data';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../../../../@shared/services/UserService';
 import { useAuth } from '../../../../@shared/contexts/Auth/AuthContext';
+import logo from "../../../../assets/logo_santa_clara.jpeg"
 
 interface MobileMenuProps {
   open: boolean;
@@ -30,7 +31,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose }) => {
               <span className="sr-only">Your Company</span>
               <img
                 alt=""
-                src="https://santaclaracentromedico.com.br/wp-content/uploads/2023/12/LOGO_SANTA_CLARA3.png"
+                src={logo}
                 className="h-8 w-auto"
               />
             </a>
